@@ -20,16 +20,14 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-MFA_PKG_LIST = attribute
-  (
+MFA_PKG_LIST = attribute(
     mfa_pkg_list,
     description: 'The list of packages needed for MFA on RHEL',
     default: [
       'esc',
       'pam_pkcs11',
       'authconfig-gtk',
-    ]
-  )
+    ])
 
 control "V-72417" do
   title "The operating system must have the required packages for multifactor
