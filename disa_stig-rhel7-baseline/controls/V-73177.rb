@@ -43,6 +43,7 @@ control "V-73177" do
   tag "nist": ["AC-18 (1)", "Rev_4"]
   tag "cci": "CCI-002418"
   tag "nist": ["SC-8", "Rev_4"]
+  tag "networking","wifi"
 
   tag "check":
     "Verify that there are no wireless interfaces configured on the system.
