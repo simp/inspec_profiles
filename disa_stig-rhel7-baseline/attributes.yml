@@ -1,0 +1,84 @@
+blacklisted_modules: ['cramfs','vfat','cramfs','freevxfs','jffs2','hfs','hfsplus','squashfs','udf']
+blacklist_conf_file: /etc/modprobe.d/CIS.conf
+sshd_config_file: /etc/ssh/sshd_config_file
+sshd_port: "22"
+pass_max_days: "60"
+pass_min_days: "7"
+pass_warn_age: "15"
+disabled_pkgs: ['dhcp']
+enabled_pkgs: ['tcp_wrappers']
+audit_conf_file: /etc/audit/audit.rules
+audit_pkg: audit
+audit_lines: [
+  '-w /etc/issue -p wa -k system-locale','-w /etc/group -p wa -k identity',
+  '-a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change',
+  '-a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change',
+  '-a always,exit -F arch=b32 -S clock_settime -F a0=0 -k time-change',
+  '-a always,exit -F arch=b64 -S clock_settime -F a0=0 -k time-change',
+  '-w /etc/localtime -p wa -k time-change',
+  '-w /etc/group -p wa -k identity',
+  '-w /etc/passwd -p wa -k identity',
+  '-w /etc/gshadow -p wa -k identity',
+  '-w /etc/shadow -p wa -k identity',
+  '-w /etc/security/opasswd -p wa -k identity',
+  '-a always,exit -F arch=b32 -S sethostname -S setdomainname -k system-locale',
+  '-a always,exit -F arch=b64 -S sethostname -S setdomainname -k system-locale',
+  '-w /etc/issue -p wa -k system-locale',
+  '-w /etc/issue.net -p wa -k system-locale',
+  '-w /etc/hosts -p wa -k system-locale',
+  '-w /etc/sysconfig/network -p wa -k system-locale',
+  '-w /etc/selinux/ -p wa -k MAC-policy',
+  '-a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=500 -F auid!=4294967295 -k perm_mod',
+  '-a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=500 -F auid!=4294967295 -k perm_mod',
+  '-a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=500 -F auid!=4294967295 -k perm_mod',
+  '-a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F auid>=500 -F auid!=4294967295 -k perm_mod',
+  '-a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=500 -F auid!=4294967295 -k perm_mod',
+  '-a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=500 -F auid!=4294967295 -k perm_mod',
+  '-a always,exit -F arch=b32 -S creat -S open -S openat -S open_by_handle_at -S truncate -F exit=-EACCES -F auid>=500 -F auid!=4294967295 -k access',
+  '-a always,exit -F arch=b32 -S creat -S open -S openat -S open_by_handle_at -S truncate -F exit=-EPERM -F auid>=500 -F auid!=4294967295 -k access',
+  '-a always,exit -F arch=b64 -S creat -S open -S openat -S open_by_handle_at -S truncate -F exit=-EACCES -F auid>=500 -F auid!=4294967295 -k access',
+  '-a always,exit -F arch=b64 -S creat -S open -S openat -S open_by_handle_at -S truncate -F exit=-EPERM -F auid>=500 -F auid!=4294967295 -k access',
+  '-a always,exit -F path=/bin/ping -F perm=x -F auid>=500 -F auid!=4294967295 -k privileged',
+  '-a always,exit -F arch=b32 -S mount -F auid>=500 -F auid!=4294967295 -k export',
+  '-a always,exit -F arch=b64 -S mount -F auid>=500 -F auid!=4294967295 -k export',
+  '-w /etc/sudoers -p wa -k actions',
+  '-w /var/log/faillog -p wa -k logins',
+  '-w /var/log/lastlog -p wa -k logins',
+  '-w /var/log/btmp -p wa -k session',
+  '-w /var/run/utmp -p wa -k session',
+  '-w /var/log/wtmp -p wa -k session',
+  '-a always,exit -F arch=b64 -S mount -F auid>=500 -F auid!=4294967295 -k mounts',
+  '-a always,exit -F arch=b32 -S mount -F auid>=500 -F auid!=4294967295 -k mounts',
+  '-a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -F auid>=500 -F auid!=4294967295 -k delete',
+  '-a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=500 -F auid!=4294967295 -k delete',
+  '-w /var/log/sudo.log -p wa -k actions',
+  '-w /sbin/insmod -p x -k modules',
+  '-w /sbin/rmmod -p x -k modules',
+  '-w /sbin/modprobe -p x -k modules',
+  '-a always,exit arch=b64 -S init_module -S delete_module -k modules',
+  '-b 8192',
+  '-f 1',
+  '-D'
+  ]
+  pam_lines: [
+    %r{^auth\s+required\s+pam_env.so},
+    %r{^auth\s+required\s+pam_faillock.so\spreauth\saudit\ssilent\sdeny=5\sunlock_time=900},
+    %r{^auth\s+sufficient\s+pam_unix.so\snullok\stry_first_pass},
+    %r{^auth\s+sufficient\s+pam_faillock.so\sauthsucc\saudit\sdeny=5\sunlock_time=900},
+    %r{^auth\s+requisite\s+pam_succeed_if.so\suid\s>=\s1000\squiet_success},
+    %r{^auth\s+required\s+pam_deny.so},
+    %r{^auth\s+\[success=1\sdefault=bad]\spam_unix.so},
+    %r{^auth\s+\[default=die\]\spam_faillock.so\sauthfail\saudit\sdeny=5\sunlock_time=900},
+    %r{^account\s+required\s+pam_unix.so},
+    %r{^account\s+sufficient\s+\s+pam_localuser.so},
+    %r{^account\s+sufficient\s+\s+pam_succeed_if.so\suid\s<\s1000\squiet},
+    %r{^account\s+required\s+pam_permit.so},
+    %r{^password\s+\s+requisite\s+pam_pwquality.so\stry_first_pass\slocal_users_only\sretry=3\sauthtok_type=},
+    %r{^password\s+\s+sufficient\s+\s+pam_unix.so\ssha512\sshadow\snullok\stry_first_pass\suse_authtok\sremember=5},
+    %r{^password\s+\s+required\s+pam_deny.so},
+    %r{^session\s+optional\s+pam_keyinit.so\srevoke},
+    %r{^session\s+required\s+pam_limits.so},
+    %r{^-session\s+optional\s+pam_systemd.so},
+    %r{^session\s+\[success=1\sdefault=ignore\]\spam_succeed_if.so\sservice\sin\scrond\squiet\suse_uid},
+    %r{^session\s+required\s+pam_unix.so}
+  ]
