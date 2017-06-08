@@ -82,3 +82,5 @@ audit_lines: [
     %r{^session\s+\[success=1\sdefault=ignore\]\spam_succeed_if.so\sservice\sin\scrond\squiet\suse_uid},
     %r{^session\s+required\s+pam_unix.so}
   ]
+
+ mfa_pkg_list: ['esc','pam_pkcs11','authconfig-gtk']
