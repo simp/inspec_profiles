@@ -3,7 +3,8 @@
 dist
 /inspec_results
 /pkg
-/spec/fixtures
+/spec/fixtures/*
+!/spec/fixtures/inspec_profiles/
 /spec/rp_env
 /.rspec_system
 /.vagrant
