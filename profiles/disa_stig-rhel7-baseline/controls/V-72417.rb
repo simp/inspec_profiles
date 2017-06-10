@@ -20,6 +20,8 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
+=begin
+# TODO: Broken 'mfa_pkg_list' not defined
 MFA_PKG_LIST = attribute(
     mfa_pkg_list,
     description: 'The list of packages needed for MFA on RHEL',
@@ -28,6 +30,9 @@ MFA_PKG_LIST = attribute(
       'pam_pkcs11',
       'authconfig-gtk',
     ])
+=end
+
+MFA_PKG_LIST = ['esc', 'pam_pkcs11', 'authconfig-gtk']
 
 control "V-72417" do
   title "The operating system must have the required packages for multifactor
