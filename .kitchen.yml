@@ -1,0 +1,32 @@
+driver:
+  name: vagrant
+
+provisioner:
+  name: puppet_apply
+  # Not installing chef since inspec is used for testing
+  require_chef_for_busser: false
+  manifests_path: manifests
+  modules_path: modules
+  resolve_with_librarian_puppet: true
+
+verifier:
+  name: inspec
+  sudo: true
+
+platforms:
+  - name: centos-7.1
+
+suites:
+  - name: default
+    provisioner:
+      manifest: site.pp
+    verifier:
+      inspec_tests:
+# if you want to use your local code
+        - file://<%= ENV[('PWD')] %>/profiles/disa_stig-rhel7-baseline
+        # if you want to use the current profile in the git repo
+        #- git: https://github.com/<...>-baseline.git
+     #controls:
+     #  - V-72895
+     #attrs:
+     #  - attributes.yml
