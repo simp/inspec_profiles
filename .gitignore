@@ -16,3 +16,6 @@ dist
 /log
 /doc
 /.kitchen
+/.librarian
+/.tmp
+**/Puppetfile.lock

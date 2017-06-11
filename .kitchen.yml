@@ -8,6 +8,7 @@ provisioner:
   manifests_path: manifests
   modules_path: modules
   resolve_with_librarian_puppet: true
+  ignore_spec_fixtures: true
 
 verifier:
   name: inspec
