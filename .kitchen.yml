@@ -9,7 +9,7 @@ provisioner:
   # Not installing chef since inspec is used for testing
   require_chef_for_busser: false
   manifests_path: spec/fixtures/kitchen/manifests
-  modules_path: pec/fixtures/kitchen/modules
+  modules_path: spec/fixtures/kitchen/modules
   resolve_with_librarian_puppet: true
   ignore_spec_fixtures: true
 
