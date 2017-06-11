@@ -64,7 +64,7 @@ SRG-OS-000375-GPOS-0016.
   tag "cci": "CCI-001954"
   tag "nist": ["IA-2 (12)", "Rev_4"]
   tag "pam","nss","MFA","pki"
-  
+
   tag "check": "Verify the operating system implements multifactor authentication
 for remote access to privileged accounts via pluggable authentication modules (PAM).
 
@@ -80,4 +80,9 @@ If the \"pam\" service is not present, this is a finding."
 for remote access to privileged accounts via pluggable authentication modules (PAM).
 
 Modify all of the services lines in /etc/sssd/sssd.conf to include pam."
+
+  describe parse_config_file('/etc/sssd/sssd.conf') do
+    its('services') { should include 'pam' }
+  end
+
 end
