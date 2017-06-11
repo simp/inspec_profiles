@@ -147,7 +147,7 @@ describe 'run inspec against the appropriate fixtures' do
             end
           end
 
-          it 'should have a report' do
+          it 'should not have any failing tests' do
             inspec_json = inspec_results + '.json'
 
             fail("Could not find #{inspec_json}") unless File.exist?(inspec_json)
@@ -161,6 +161,8 @@ describe 'run inspec against the appropriate fixtures' do
             if inspec_report[:failed] > 0
               puts inspec_report[:report]
             end
+
+            expect( inspec_report[:failed] ).to eq(0)
           end
         end
       end
