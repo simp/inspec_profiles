@@ -5,6 +5,10 @@ dist
 /inspec_results
 /pkg
 /spec/fixtures/*
+!/spec/fixtures/manifests
+!/spec/fixtures/modules
+!/spec/fixtures/kitchen
+!/spec/fixtures/kitchen/**
 !/spec/fixtures/inspec_profiles/
 /spec/rp_env
 /.rspec_system
