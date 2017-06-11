@@ -15,7 +15,7 @@ dist
 /junit
 /log
 /doc
-/.kitchen
+.kitchen
 /.librarian
 /.tmp
 **/Puppetfile.lock
