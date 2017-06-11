@@ -1,4 +1,5 @@
 .*.sw?
+**/inspec.lock
 .yardoc
 dist
 /inspec_results
