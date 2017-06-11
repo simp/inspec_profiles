@@ -12,7 +12,11 @@ test_name 'Remediate via SSG'
 # not a monolithic 'lockdown'.
 #
 
+
 describe 'Use the SCAP Security Guide to remediate the system' do
+
+  # Allow users to point at a specific SSG release 'tar.bz2' file
+  ssg_release = ENV['BEAKER_ssg_release']
 
   hosts.each do |host|
     os_rel = fact_on(host, 'operatingsystemmajrelease')
@@ -26,9 +30,13 @@ describe 'Use the SCAP Security Guide to remediate the system' do
     end
 
     # Grab the latest SSG release in fixtures (if there is one)
-    ssg_release = Dir.glob('spec/fixtures/ssg_releases/*.bz2').last
+    ssg_release ||= Dir.glob('spec/fixtures/ssg_releases/*.bz2').last
 
     if ssg_release
+      if !(File.file?(ssg_release) && (ssg_release =~ /tar.bz2$/))
+        fail("SSG releases must be a 'tar.bz2' file, got #{ssg_release}")
+      end
+
       scp_to(host, ssg_release)
       on(host, "mkdir -p scap-security-guide && tar -xj -C scap-security-guide --strip-components 1 -f #{ssg_release} && cp scap-security-guide/*ds.xml ~")
     else
