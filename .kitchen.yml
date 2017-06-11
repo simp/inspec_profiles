@@ -8,8 +8,8 @@ provisioner:
   name: puppet_apply
   # Not installing chef since inspec is used for testing
   require_chef_for_busser: false
-  manifests_path: manifests
-  modules_path: modules
+  manifests_path: spec/fixtures/manifests
+  modules_path: pec/fixtures/modules
   resolve_with_librarian_puppet: true
   ignore_spec_fixtures: true
 
