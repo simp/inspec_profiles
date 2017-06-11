@@ -1,12 +1,15 @@
 driver:
   name: vagrant
+  customize:
+    natdnsproxy1: 'on'
+    natdnshostresolver1: 'on'
 
 provisioner:
   name: puppet_apply
   # Not installing chef since inspec is used for testing
   require_chef_for_busser: false
-  manifests_path: manifests
-  modules_path: modules
+  manifests_path: spec/fixtures/kitchen/manifests
+  modules_path: spec/fixtures/kitchen/modules
   resolve_with_librarian_puppet: true
   ignore_spec_fixtures: true
 
