@@ -36,4 +36,4 @@ CONFIG:
   log_level: verbose
   type:      aio
   vagrant_memsize: 256
-  #natdns: 'on'
+  natdns: 'on'

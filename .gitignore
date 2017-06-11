@@ -1,4 +1,5 @@
 .*.sw?
+**/inspec.lock
 .yardoc
 dist
 /inspec_results
@@ -15,3 +16,6 @@ dist
 /log
 /doc
 /.kitchen
+/.librarian
+/.tmp
+**/Puppetfile.lock

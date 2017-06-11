@@ -18,9 +18,10 @@ describe 'run inspec against the appropriate fixtures' do
     HighLine.colorize_strings
 
     stats = {
-      :passed => 0,
-      :failed => 0,
-      :report => []
+      :passed  => 0,
+      :failed  => 0,
+      :skipped => 0,
+      :report  => []
     }
 
     profiles = inspec_results['profiles']
@@ -30,6 +31,7 @@ describe 'run inspec against the appropriate fixtures' do
 
       profile['controls'].each do |control|
         title = control['title']
+
         if title.length > 72
           title = title[0..71] + '(...)'
         end
@@ -42,10 +44,19 @@ describe 'run inspec against the appropriate fixtures' do
           stats[:report] << title_chunks.join("\n")
         end
 
-        status = control['results'].first['status']
+        if control['results']
+          status = control['results'].first['status']
+        else
+          status = 'skipped'
+        end
 
         status_str = "    Status: "
-        if status =~ /^fail/
+        if status == 'skipped'
+          stats[:skipped] += 1
+
+          stats[:report] << status_str + status.yellow
+          stats[:report] << "    File: #{control['source_location']['ref']}"
+        elsif status =~ /^fail/
           stats[:failed] += 1
 
           stats[:report] << status_str + status.red
@@ -60,6 +71,7 @@ describe 'run inspec against the appropriate fixtures' do
       stats[:report] << "\n  Statistics:"
       stats[:report] << "    * Passed: #{stats[:passed].to_s.green}"
       stats[:report] << "    * Failed: #{stats[:failed].to_s.red}"
+      stats[:report] << "    * Skipped: #{stats[:skipped].to_s.yellow}"
       stats[:report] << "    * Score:  #{((stats[:passed].to_f/(stats[:passed] + stats[:failed])) * 100.0).round(0)}%"
     end
 
@@ -97,10 +109,33 @@ describe 'run inspec against the appropriate fixtures' do
 
           it 'should run inspec and export results' do
             inspec_cmd = "inspec exec --format json #{sut_profile_dir} > #{sut_inspec_results}"
+            result = on(host, inspec_cmd, :accept_all_exit_codes => true)
 
-            result = on(host, inspec_cmd, :silent => true)
+            tmpdir = Dir.mktmpdir
+            inspec_json = nil
+            begin
+              Dir.chdir(tmpdir) do
 
-            if result.stdout.strip.empty?
+                scp_from(host, sut_inspec_results, '.')
+
+                local_inspec_results = File.basename(sut_inspec_results)
+
+                if File.exist?(local_inspec_results)
+                  File.open(inspec_results + '.json', 'w') do |fh|
+                    begin
+                      inspec_json = JSON.load(File.read(local_inspec_results))
+                      fh.puts(JSON.pretty_generate(inspec_json))
+                    rescue JSON::ParserError, JSON::GeneratorError
+                      inspec_json = nil
+                    end
+                  end
+                end
+              end
+            ensure
+              FileUtils.remove_entry_secure tmpdir
+            end
+
+            unless inspec_json
               File.open(inspec_results + '.err', 'w') do |fh|
                 fh.puts(result.stderr.strip)
               end
@@ -109,27 +144,7 @@ describe 'run inspec against the appropriate fixtures' do
               err_msg << "Error captured in #{inspec_results}" + '.err'
 
               fail(err_msg.join("\n"))
-            else
-              File.open(inspec_results + '.json', 'w') do |fh|
-                fh.puts(JSON.pretty_generate(result.stdout.strip))
-              end
             end
-
-=begin
-            tmpdir = Dir.mktmpdir
-            begin
-              Dir.chdir(tmpdir) do
-                scp_from(host, sut_inspec_results, '.')
-
-                File.open(inspec_results + '.json', 'w') do |fh|
-                  inspec_json = JSON.load(File.read(File.basename(sut_inspec_results)))
-                  fh.puts(JSON.pretty_generate(inspec_json))
-                end
-              end
-            ensure
-              FileUtils.remove_entry_secure tmpdir
-            end
-=end
           end
 
           it 'should not have any failing tests' do
