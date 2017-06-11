@@ -8,8 +8,8 @@ provisioner:
   name: puppet_apply
   # Not installing chef since inspec is used for testing
   require_chef_for_busser: false
-  manifests_path: manifests
-  modules_path: modules
+  manifests_path: spec/fixtures/kitchen/manifests
+  modules_path: spec/fixtures/kitchen/modules
   resolve_with_librarian_puppet: true
   ignore_spec_fixtures: true
 
@@ -32,7 +32,7 @@ suites:
         - file://<%= ENV[('PWD')] %>/profiles/disa_stig-rhel7-baseline
         # if you want to use the current profile in the git repo
         #- git: https://github.com/<...>-baseline.git
-     #controls:
-     #  - V-72895
+      #controls:
+      #  - V-72309
      #attrs:
      #  - attributes.yml
