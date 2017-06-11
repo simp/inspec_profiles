@@ -26,6 +26,23 @@ To run the tests, perform the following actions:
 2. Run ``bundle install``
 3. Run ``rake beaker:suites``
 
+### Debugging
+
+If you need to debug your systems, you can run Beaker with a couple of options:
+
+1. Preserve the VM unconditionally
+   * ``BEAKER_destroy=no rake beaker:suites``
+2. Preserve the VM unless the tests pass
+   * ``BEAKER_destroy=onpass rake beaker:suites``
+
+You can then access the VM by going to the root level of the repository and
+navigating to `.vagrant/beaker_vagrant_files/<automatic directory>`.
+
+You should find a `Vagrantfile` at that location and can use any standard
+[Vagrant CLI Commands](https://www.vagrantup.com/docs/cli/).
+
+The most useful of these will be ``vagrant status`` and ``vagrant ssh <vm name>``.
+
 ## Test Layout
 
 The tests are housed under the ``spec/acceptance`` directory and use the
