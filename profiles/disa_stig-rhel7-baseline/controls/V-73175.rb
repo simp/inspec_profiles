@@ -54,5 +54,4 @@ value): net.ipv4.conf.all.accept_redirects = 0"
   describe kernel_parameter('net.ipv4.conf.all.accept_redirects') do
     its('value') { should eq 0 }
   end
-
 end
