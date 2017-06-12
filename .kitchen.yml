@@ -32,7 +32,7 @@ suites:
         - file://<%= ENV[('PWD')] %>/profiles/disa_stig-rhel7-baseline
         # if you want to use the current profile in the git repo
         #- git: https://github.com/<...>-baseline.git
-     #controls:
-     #  - V-72895
+      #controls:
+      #  - V-72309
      #attrs:
      #  - attributes.yml
