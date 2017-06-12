@@ -65,6 +65,7 @@ command:
 #rpm --setugids <packagename>"
 
   # @todo add puppet content to fix any rpms that get out of wack
+  # @todo find a way to make this a faster test or to cache it
   describe command("rpm -Va | grep '^.M' | wc -l") do
     its('stdout.strip') { should eq '0' }
   end
