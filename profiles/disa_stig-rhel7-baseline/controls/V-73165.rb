@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide
+Status: Accepted
 
 This Security Technical Implementation Guide is published as a tool to improve
 the security of Department of Defense (DoD) information systems. The
@@ -12,23 +12,23 @@ Technology (NIST) 800-53 and related documents. Comments or proposed revisions
 to this document should be sent via email to the following address:
 disa.stig_spt@mail.mil.
 
-Release Date: 2017-03-08 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2017-03-08
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 control "V-73165" do
-  title "The operating system must generate audit records for all account creations, 
+  title "The operating system must generate audit records for all account creations,
 modifications, disabling, and termination events that affect /etc/group."
   desc  "
-    Without generating audit records that are specific to the security and mission 
-needs of the organization, it would be difficult to establish, correlate, and 
+    Without generating audit records that are specific to the security and mission
+needs of the organization, it would be difficult to establish, correlate, and
 investigate the events relating to an incident or identify those responsible for one.
-    
-    Audit records can be generated from various components within the information 
+
+    Audit records can be generated from various components within the information
 system (e.g., module or policy filter).
   "
   impact 0.5
@@ -45,8 +45,8 @@ system (e.g., module or policy filter).
   tag "nist": ["AC-2 (4)", "Rev_4"]
   tag "cci": "CCI-002130"
   tag "nist": ["AC-2 (4)", "Rev_4"]
-  tag "check": "Verify the operating system must generate audit records for all 
-account creations, modifications, disabling, and termination events that affect 
+  tag "check": "Verify the operating system must generate audit records for all
+account creations, modifications, disabling, and termination events that affect
 \"/etc/group\".
 
 Check the auditing rules in \"/etc/audit/audit.rules\" with the following command:
@@ -55,10 +55,10 @@ Check the auditing rules in \"/etc/audit/audit.rules\" with the following comman
 
 -w /etc/group -p wa -k audit_rules_usergroup_modification
 
-If the command does not return a line, or the line is commented out, this is a 
+If the command does not return a line, or the line is commented out, this is a
 finding."
-  tag "fix": "Configure the operating system to generate audit records for all 
-account creations, modifications, disabling, and termination events that affect 
+  tag "fix": "Configure the operating system to generate audit records for all
+account creations, modifications, disabling, and termination events that affect
 \"/etc/group\".
 
 Add or update the following rule in \"/etc/audit/rules.d/audit.rules\":
@@ -66,4 +66,9 @@ Add or update the following rule in \"/etc/audit/rules.d/audit.rules\":
 -w /etc/group -p wa -k identity
 
 The audit daemon must be restarted for the changes to take effect."
+
+  describe auditd_rules do
+    its('lines') { should contain_match(%r{^\s-w\s/etc/group\s-p\swa\s-k\sidentity$}) }
+  end
+  only_if { package('audit').installed? }
 end
