@@ -30,6 +30,8 @@ suites:
       inspec_tests:
         # if you want to use your local code
         - file://<%= ENV[('PWD')] %>/profiles/disa_stig-rhel7-baseline
+        # If you want to use your local code on a Windows machine from the parent directory
+        #- path: ./profiles/disa_stig-rhel7-baseline
         # if you want to use the current profile in the git repo
         #- git: https://github.com/<...>-baseline.git
       #controls:

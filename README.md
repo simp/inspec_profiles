@@ -53,13 +53,28 @@ profiles in ``spec/fixtures/inspec_profiles`` during testing.
 
 # Testing with Kitchen
 
+## Dependencies
+* Ruby 2.1.9 or later
+* [Virtualbox](https://www.virtualbox.org)
+* [Vagrant](https://www.vagrantup.com)
+
+#### <i>Notes to Windows Users</i>
+1. An installation of ChefDK may generate conflicts when combined with the installed kitchen gems. <b>Recommend NOT installing ChefDK before testing with this repo.</b>
+2. If you run into errors when running ``bundle install``, use the following commands to install gems:
+  * ``gem install kitchen-puppet``
+  * ``gem install librarian-puppet``
+  * ``gem install kitchen-vagrant``
+3. If the tests are not found when running ``kitchen verify``, open ``.kitchen.yml`` and consult ``inspec_tests`` under the ``suites`` section.
+4. You may also experience an error when running ``kitchen converge`` where a folder is unable to be created due to the length of the path. In this case, you may need to edit a registry key as explained [here](https://www.howtogeek.com/266621/how-to-make-windows-10-accept-file-paths-over-260-characters/).
+
 ## Setting up your box
 1. Clone the repo via `git clone -b dev https://github.com/simp/inspec_profiles.git`
-4. cd to `inspec_profiles`
-5. Run `kitchen list` - you should see two choices:   
+2. cd to `inspec_profiles`
+3. Run ``bundle install``
+4. Run `kitchen list` - you should see the following choice:   
   - `default-centos-7`    
-6. Run `kitchen converge default-centos-7`  
-7. Run `kitchen list` - your should see your host with status "converged"
+5. Run `kitchen converge default-centos-7`  
+6. Run `kitchen list` - your should see your host with status "converged"
 
 ## Validating your box
 note: once the open issues are resolved in InSpec and kitchen-inspec these steps will not really be needed but for now
