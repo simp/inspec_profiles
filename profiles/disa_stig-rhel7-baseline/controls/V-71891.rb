@@ -97,8 +97,8 @@ Update the system databases:
 
 Users must log out and back in again before the system-wide settings take effect."
 
-  describe command("grep -i lock-enabled /etc/dconf/db/local.d/00-screensaver") do
-    its('stdout') { should cmp 'lock-enabled=true'}
+  describe parse_config_file('/etc/dconf/db/local.d/00-screensaver') do
+    its('lock-enabled') { should cmp 'true' }
   end
   only_if { package('gnome-desktop3').installed? }
 end

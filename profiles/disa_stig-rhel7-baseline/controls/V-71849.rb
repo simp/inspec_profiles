@@ -65,8 +65,8 @@ command:
 #rpm --setugids <packagename>"
 
   # @todo add puppet content to fix any rpms that get out of wack
-  describe command("rpm -Va | grep '^.M' | wc -l") do
-    its('stdout.strip') { should eq '0' }
-  end
+  #describe command("rpm -Va | grep '^.M' | wc -l") do
+#    its('stdout.strip') { should eq '0' }
+#  end
 
 end

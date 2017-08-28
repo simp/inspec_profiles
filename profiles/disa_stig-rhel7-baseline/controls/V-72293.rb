@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide
+Status: Accepted
 
 This Security Technical Implementation Guide is published as a tool to improve
 the security of Department of Defense (DoD) information systems. The
@@ -12,19 +12,19 @@ Technology (NIST) 800-53 and related documents. Comments or proposed revisions
 to this document should be sent via email to the following address:
 disa.stig_spt@mail.mil.
 
-Release Date: 2017-03-08 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2017-03-08
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 control "V-72293" do
-  title "The system must not send Internet Protocol version 4 (IPv4) Internet 
+  title "The system must not send Internet Protocol version 4 (IPv4) Internet
 Control Message Protocol (ICMP) redirects."
-  desc  "ICMP redirect messages are used by routers to inform hosts that a more 
-direct route exists for a particular destination. These messages contain information 
+  desc  "ICMP redirect messages are used by routers to inform hosts that a more
+direct route exists for a particular destination. These messages contain information
 from the system's route table, possibly revealing portions of the network topology."
   impact 0.5
   tag "severity": "medium"
@@ -42,13 +42,17 @@ Check the value of the \"all send_redirects\" variables with the following comma
 
 net.ipv4.conf.all.send_redirects=0
 
-If the returned line does not have a value of \"0\", or a line is not returned, this 
+If the returned line does not have a value of \"0\", or a line is not returned, this
 is a finding."
   tag "fix": "Configure the system to not allow interfaces to perform IPv4 ICMP 
-redirects. 
+redirects.
 
-Set the system to the required kernel parameter by adding the following line to 
+Set the system to the required kernel parameter by adding the following line to
 \"/etc/sysctl.conf\" (or modify the line to have the required value):
 
 net.ipv4.conf.all.send_redirects=0"
+
+  describe kernel_parameter('net.ipv4.conf.all.send_redirects') do
+    its('value') { should eq 0 }
+  end
 end

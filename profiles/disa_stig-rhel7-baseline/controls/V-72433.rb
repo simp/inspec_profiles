@@ -90,7 +90,7 @@ include \"ocsp_on\"."
   end
 
   describe command("grep cert_policy /etc/pam_pkcs11/pam_pkcs11.conf | wc -l") do
-    its('stdout.strip.to_i') { should >= 3 }
+    its('stdout.strip.to_i') { should cmp >= 3 }
   end
 
 end

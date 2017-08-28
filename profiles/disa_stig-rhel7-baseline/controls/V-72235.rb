@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide
+Status: Accepted
 
 This Security Technical Implementation Guide is published as a tool to improve
 the security of Department of Defense (DoD) information systems. The
@@ -12,36 +12,36 @@ Technology (NIST) 800-53 and related documents. Comments or proposed revisions
 to this document should be sent via email to the following address:
 disa.stig_spt@mail.mil.
 
-Release Date: 2017-03-08 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2017-03-08
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 control "V-72235" do
-  title "All networked systems must use SSH for confidentiality and integrity of 
-transmitted and received information as well as information during preparation for 
+  title "All networked systems must use SSH for confidentiality and integrity of
+transmitted and received information as well as information during preparation for
 transmission."
   desc  "
-    Without protection of the transmitted information, confidentiality and integrity 
-may be compromised because unprotected communications can be intercepted and either 
-read or altered. 
-    
-    This requirement applies to both internal and external networks and all types of 
-information system components from which information can be transmitted (e.g., 
-servers, mobile devices, notebook computers, printers, copiers, scanners, and 
-facsimile machines). Communication paths outside the physical protection of a 
-controlled boundary are exposed to the possibility of interception and modification. 
-    
-    Protecting the confidentiality and integrity of organizational information can 
-be accomplished by physical means (e.g., employing physical distribution systems) or 
-by logical means (e.g., employing cryptographic techniques). If physical means of 
-protection are employed, then logical means (cryptography) do not have to be 
+    Without protection of the transmitted information, confidentiality and integrity
+may be compromised because unprotected communications can be intercepted and either
+read or altered.
+
+    This requirement applies to both internal and external networks and all types of
+information system components from which information can be transmitted (e.g.,
+servers, mobile devices, notebook computers, printers, copiers, scanners, and
+facsimile machines). Communication paths outside the physical protection of a
+controlled boundary are exposed to the possibility of interception and modification.
+
+    Protecting the confidentiality and integrity of organizational information can
+be accomplished by physical means (e.g., employing physical distribution systems) or
+by logical means (e.g., employing cryptographic techniques). If physical means of
+protection are employed, then logical means (cryptography) do not have to be
 employed, and vice versa.
-    
-    Satisfies: SRG-OS-000423-GPOS-00187, SRG-OS-000423-GPOS-00188, 
+
+    Satisfies: SRG-OS-000423-GPOS-00187, SRG-OS-000423-GPOS-00188,
 SRG-OS-000423-GPOS-00189, SRG-OS-000423-GPOS-0019.
   "
   impact 0.5
@@ -69,9 +69,13 @@ SRG-OS-000423-GPOS-00189, SRG-OS-000423-GPOS-0019.
            ??1348 /usr/sbin/sshd -D
 
 If \"sshd\" does not show a status of \"active\" and \"running\", this is a finding."
-  tag "fix": "Configure the SSH service to automatically start after reboot with the 
+  tag "fix": "Configure the SSH service to automatically start after reboot with the
 following command:
 
-# systemctl enable sshd ln -s '/usr/lib/systemd/system/sshd.service' 
+# systemctl enable sshd ln -s '/usr/lib/systemd/system/sshd.service'
 '/etc/systemd/system/multi-user.target.wants/sshd.service'"
+
+  describe systemd_service('sshd.service') do
+    it { should be_running }
+  end
 end

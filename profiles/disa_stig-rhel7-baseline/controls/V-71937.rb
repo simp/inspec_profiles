@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide
+Status: Accepted
 
 This Security Technical Implementation Guide is published as a tool to improve
 the security of Department of Defense (DoD) information systems. The
@@ -12,18 +12,18 @@ Technology (NIST) 800-53 and related documents. Comments or proposed revisions
 to this document should be sent via email to the following address:
 disa.stig_spt@mail.mil.
 
-Release Date: 2017-03-08 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2017-03-08
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 control "V-71937" do
   title "The system must not have accounts configured with blank or null passwords."
-  desc  "If an account has an empty password, anyone could log on and run commands 
-with the privileges of that account. Accounts with empty passwords should never be 
+  desc  "If an account has an empty password, anyone could log on and run commands
+with the privileges of that account. Accounts with empty passwords should never be
 used in operational environments."
   impact 0.7
   tag "severity": "high"
@@ -33,19 +33,30 @@ used in operational environments."
   tag "stig_id": "RHEL-07-010290"
   tag "cci": "CCI-000366"
   tag "nist": ["CM-6 b", "Rev_4"]
-  tag "check": "To verify that null passwords cannot be used, run the following 
-command: 
+  tag "check": "To verify that null passwords cannot be used, run the following
+command:
 
 # grep nullok /etc/pam.d/system-auth-ac
 
-If this produces any output, it may be possible to log on with accounts with empty 
+If this produces any output, it may be possible to log on with accounts with empty
 passwords.
 
 If null passwords can be used, this is a finding."
-  tag "fix": "If an account is configured for password authentication but does not 
-have an assigned password, it may be possible to log on to the account without 
+  tag "fix": "If an account is configured for password authentication but does not
+have an assigned password, it may be possible to log on to the account without
 authenticating.
 
-Remove any instances of the \"nullok\" option in \"/etc/pam.d/system-auth-ac\" to 
+Remove any instances of the \"nullok\" option in \"/etc/pam.d/system-auth-ac\" to
 prevent logons with empty passwords and run the \"authconfig\" command."
+
+  describe.one do
+    # case when nullok doesn't exist in system-auth-ac
+    describe command("grep nullok /etc/pam.d/system-auth-ac") do
+      its('stdout') { should match /^$/}
+    end
+   # case when nullok is commented out
+   describe command("grep nullok /etc/pam.d/system-auth-ac") do
+      its('stdout') { should match /^#\s+nullok\s+.*$/ }
+    end
+  end
 end

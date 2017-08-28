@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide
+Status: Accepted
 
 This Security Technical Implementation Guide is published as a tool to improve
 the security of Department of Defense (DoD) information systems. The
@@ -12,18 +12,18 @@ Technology (NIST) 800-53 and related documents. Comments or proposed revisions
 to this document should be sent via email to the following address:
 disa.stig_spt@mail.mil.
 
-Release Date: 2017-03-08 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2017-03-08
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 control "V-72265" do
   title "The SSH daemon must use privilege separation."
-  desc  "SSH daemon privilege separation causes the SSH process to drop root 
-privileges when not needed, which would decrease the impact of software 
+  desc  "SSH daemon privilege separation causes the SSH process to drop root
+privileges when not needed, which would decrease the impact of software
 vulnerabilities in the unprivileged section."
   impact 0.5
   tag "severity": "medium"
@@ -41,14 +41,23 @@ Check that the SSH daemon performs privilege separation with the following comma
 
 UsePrivilegeSeparation sandbox
 
-If the \"UsePrivilegeSeparation\" keyword is set to \"no\", is missing, or the 
+If the \"UsePrivilegeSeparation\" keyword is set to \"no\", is missing, or the
 retuned line is commented out, this is a finding."
-  tag "fix": "Uncomment the \"UsePrivilegeSeparation\" keyword in 
-\"/etc/ssh/sshd_config\" (this file may be named differently or be in a different 
-location if using a version of SSH that is provided by a third-party vendor) and set 
+  tag "fix": "Uncomment the \"UsePrivilegeSeparation\" keyword in
+\"/etc/ssh/sshd_config\" (this file may be named differently or be in a different
+location if using a version of SSH that is provided by a third-party vendor) and set
 the value to \"sandbox\" or \"yes\":
 
 UsePrivilegeSeparation sandbox
 
 The SSH service must be restarted for changes to take effect."
+
+  describe.one do
+    describe sshd_config do
+      its('UsePrivilegeSeparation') { should cmp 'sandbox' }
+    end
+    describe sshd_config do
+      its('UsePrivilegeSeparation') { should cmp 'yes' }
+    end
+  end
 end

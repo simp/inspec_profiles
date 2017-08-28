@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide
+Status: Accepted
 
 This Security Technical Implementation Guide is published as a tool to improve
 the security of Department of Defense (DoD) information systems. The
@@ -12,17 +12,17 @@ Technology (NIST) 800-53 and related documents. Comments or proposed revisions
 to this document should be sent via email to the following address:
 disa.stig_spt@mail.mil.
 
-Release Date: 2017-03-08 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2017-03-08
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 control "V-71955" do
   title "The operating system must not allow an unrestricted logon to the system."
-  desc  "Failure to restrict system access to authenticated users negatively impacts 
+  desc  "Failure to restrict system access to authenticated users negatively impacts
 operating system security."
   impact 0.7
   tag "severity": "high"
@@ -32,28 +32,32 @@ operating system security."
   tag "stig_id": "RHEL-07-010450"
   tag "cci": "CCI-000366"
   tag "nist": ["CM-6 b", "Rev_4"]
-  tag "check": "Verify the operating system does not allow an unrestricted logon to 
+  tag "check": "Verify the operating system does not allow an unrestricted logon to
 the system via a graphical user interface.
 
-Note: If the system does not have GNOME installed, this requirement is Not 
-Applicable. 
+Note: If the system does not have GNOME installed, this requirement is Not
+Applicable.
 
-Check for the value of the \"TimedLoginEnable\" parameter in 
+Check for the value of the \"TimedLoginEnable\" parameter in
 \"/etc/gdm/custom.conf\" file with the following command:
 
 # grep -i timedloginenable /etc/gdm/custom.conf
 TimedLoginEnable=false
 
 If the value of \"TimedLoginEnable\" is not set to \"false\", this is a finding."
-  tag "fix": "Configure the operating system to not allow an unrestricted account to 
+  tag "fix": "Configure the operating system to not allow an unrestricted account to
 log on to the system via a graphical user interface.
 
-Note: If the system does not have GNOME installed, this requirement is Not 
+Note: If the system does not have GNOME installed, this requirement is Not
 Applicable.
 
-Add or edit the line for the \"TimedLoginEnable\" parameter in the [daemon] section 
+Add or edit the line for the \"TimedLoginEnable\" parameter in the [daemon] section
 of the \"/etc/gdm/custom.conf\" file to \"false\":
 
 [daemon]
 TimedLoginEnable=false"
+
+  describe parse_config_file("/etc/gdm/custom.conf") do
+    its('TimedLoginEnable') { should eq 'false' }
+  end
 end
