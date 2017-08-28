@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide
+Status: Accepted
 
 This Security Technical Implementation Guide is published as a tool to improve
 the security of Department of Defense (DoD) information systems. The
@@ -12,20 +12,20 @@ Technology (NIST) 800-53 and related documents. Comments or proposed revisions
 to this document should be sent via email to the following address:
 disa.stig_spt@mail.mil.
 
-Release Date: 2017-03-08 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2017-03-08
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 control "V-72075" do
-  title "The system must not allow removable media to be used as the boot loader 
+  title "The system must not allow removable media to be used as the boot loader
 unless approved."
-  desc  "Malicious users with removable boot media can gain access to a system 
-configured to use removable media as the boot loader. If removable media is designed 
-to be used as the boot loader, the requirement must be documented with the 
+  desc  "Malicious users with removable boot media can gain access to a system
+configured to use removable media as the boot loader. If removable media is designed
+to be used as the boot loader, the requirement must be documented with the
 Information System Security Officer (ISSO)."
   impact 0.5
   tag "severity": "medium"
@@ -43,24 +43,24 @@ Information System Security Officer (ISSO)."
   tag "nist": ["CM-5 (1)", "Rev_4"]
   tag "cci": "CCI-001814"
   tag "nist": ["CM-5 (1)", "Rev_4"]
-  tag "check": "Verify the system is not configured to use a boot loader on 
+  tag "check": "Verify the system is not configured to use a boot loader on
 removable media.
 
-Note: GRUB 2 reads its configuration from the \"/boot/grub2/grub.cfg\" file on 
-traditional BIOS-based machines and from the \"/boot/efi/EFI/redhat/grub.cfg\" file 
+Note: GRUB 2 reads its configuration from the \"/boot/grub2/grub.cfg\" file on
+traditional BIOS-based machines and from the \"/boot/efi/EFI/redhat/grub.cfg\" file
 on UEFI machines.
 
-Check for the existence of alternate boot loader configuration files with the 
+Check for the existence of alternate boot loader configuration files with the
 following command:
 
 # find / -name grub.cfg
 /boot/grub2/grub.cfg
 
-If a \"grub.cfg\" is found in any subdirectories other than \"/boot/grub2\" and 
-\"/boot/efi/EFI/redhat\", ask the System Administrator if there is documentation 
-signed by the ISSO to approve the use of removable media as a boot loader. 
+If a \"grub.cfg\" is found in any subdirectories other than \"/boot/grub2\" and
+\"/boot/efi/EFI/redhat\", ask the System Administrator if there is documentation
+signed by the ISSO to approve the use of removable media as a boot loader.
 
-Check that the grub configuration file has the set root command in each menu entry 
+Check that the grub configuration file has the set root command in each menu entry
 with the following commands:
 
 # grep -c menuentry /boot/grub2/grub.cfg
@@ -68,9 +68,22 @@ with the following commands:
 # grep ‘set root’ /boot/grub2/grub.cfg
 set root=(hd0,1)
 
-If the system is using an alternate boot loader on removable media, and 
-documentation does not exist approving the alternate configuration, this is a 
+If the system is using an alternate boot loader on removable media, and
+documentation does not exist approving the alternate configuration, this is a
 finding."
-  tag "fix": "Remove alternate methods of booting the system from removable media or 
+  tag "fix": "Remove alternate methods of booting the system from removable media or
 document the configuration to boot from removable media with the ISSO."
+
+  # @todo -make test more efficient/check for set root
+  grub_cfgs = command('find / -name grub.cfg').stdout.split("\n")
+  grub_cfgs.each do |cfg|
+    describe.one do
+      describe file(cfg) do
+        its('path') { should eq '/boot/grub2/grub.cfg' }
+      end
+      describe file(cfg) do
+        its('path') { should eq '/boot/efi/EFI/redhat/grub.cfg' }
+      end
+    end
+  end
 end

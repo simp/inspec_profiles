@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide
+Status: Accepted
 
 This Security Technical Implementation Guide is published as a tool to improve
 the security of Department of Defense (DoD) information systems. The
@@ -12,17 +12,17 @@ Technology (NIST) 800-53 and related documents. Comments or proposed revisions
 to this document should be sent via email to the following address:
 disa.stig_spt@mail.mil.
 
-Release Date: 2017-03-08 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2017-03-08
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 control "V-72053" do
   title "If the cron.allow file exists it must be owned by root."
-  desc  "If the owner of the \"cron.allow\" file is not set to root, the possibility 
+  desc  "If the owner of the \"cron.allow\" file is not set to root, the possibility
 exists for an unauthorized user to view or to edit sensitive information."
   impact 0.5
   tag "severity": "medium"
@@ -39,10 +39,21 @@ Check the owner of the \"cron.allow\" file with the following command:
 # l s -al /etc/cron.allow
 -rw------- 1 root root 6 Mar  5  2011 /etc/cron.allow
 
-If the \"cron.allow\" file exists and has an owner other than root, this is a 
+If the \"cron.allow\" file exists and has an owner other than root, this is a
 finding."
-  tag "fix": "Set the owner on the \"/etc/cron.allow\" file to root with the 
+  tag "fix": "Set the owner on the \"/etc/cron.allow\" file to root with the
 following command:
 
 # chown root /etc/cron.allow"
+
+  describe.one do
+    # case where file doesn't exist
+    describe file('/etc/cron.allow') do
+      it { should_not exist }
+    end
+    # case where file exists
+    describe file('/etc/cron.allow') do
+      it { should be_owned_by 'root' }
+    end
+  end
 end

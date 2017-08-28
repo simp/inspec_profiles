@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide
+Status: Accepted
 
 This Security Technical Implementation Guide is published as a tool to improve
 the security of Department of Defense (DoD) information systems. The
@@ -12,17 +12,17 @@ Technology (NIST) 800-53 and related documents. Comments or proposed revisions
 to this document should be sent via email to the following address:
 disa.stig_spt@mail.mil.
 
-Release Date: 2017-03-08 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2017-03-08
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 control "V-72065" do
   title "The system must use a separate file system for /tmp (or equivalent)."
-  desc  "The use of separate file systems for different paths can protect the system 
+  desc  "The use of separate file systems for different paths can protect the system
 from failures resulting from a file system becoming full or failing."
   impact 0.3
   tag "severity": "low"
@@ -32,10 +32,10 @@ from failures resulting from a file system becoming full or failing."
   tag "stig_id": "RHEL-07-021340"
   tag "cci": "CCI-000366"
   tag "nist": ["CM-6 b", "Rev_4"]
-  tag "check": "Verify that a separate file system/partition has been created for 
+  tag "check": "Verify that a separate file system/partition has been created for
 \"/tmp\".
 
-Check that a file system/partition has been created for \"/tmp\" with the following 
+Check that a file system/partition has been created for \"/tmp\" with the following
 command:
 
 # systemctl is-enabled tmp.mount
@@ -45,4 +45,8 @@ If the \"tmp.mount\" service is not enabled, this is a finding."
   tag "fix": "Start the \"tmp.mount\" service with the following command:
 
 # systemctl enable tmp.mount"
+
+  describe systemd_service('tmp.mount') do
+    it { should be_enabled }
+  end
 end

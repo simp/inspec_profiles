@@ -91,7 +91,7 @@ Enable smart card logons with the following commands:
   end
 
   describe command('authconfig --test | grep -i "smartcard removal action" | awk \'{ print $NF }\'') do
-    it { should_not be nil }
+    its('stdout.strip') { should_not be nil }
   end
 
 end

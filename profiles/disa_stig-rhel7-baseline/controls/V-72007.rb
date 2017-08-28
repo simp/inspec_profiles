@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide
+Status: Accepted
 
 This Security Technical Implementation Guide is published as a tool to improve
 the security of Department of Defense (DoD) information systems. The
@@ -12,17 +12,17 @@ Technology (NIST) 800-53 and related documents. Comments or proposed revisions
 to this document should be sent via email to the following address:
 disa.stig_spt@mail.mil.
 
-Release Date: 2017-03-08 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2017-03-08
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 control "V-72007" do
   title "All files and directories must have a valid owner."
-  desc  "Unowned files and directories may be unintentionally inherited if a user is 
+  desc  "Unowned files and directories may be unintentionally inherited if a user is
 assigned the same User Identifier \"UID\" as the UID of the un-owned files."
   impact 0.5
   tag "severity": "medium"
@@ -36,15 +36,19 @@ assigned the same User Identifier \"UID\" as the UID of the un-owned files."
 
 Check the owner of all files and directories with the following command:
 
-Note: The value after -fstype must be replaced with the filesystem type. XFS is used 
+Note: The value after -fstype must be replaced with the filesystem type. XFS is used
 as an example.
 
 # find / -xdev -fstype xfs -nouser
 
 If any files on the system do not have an assigned owner, this is a finding."
-  tag "fix": "Either remove all files and directories from the system that do not 
-have a valid user, or assign a valid user to all unowned files and directories on 
+  tag "fix": "Either remove all files and directories from the system that do not
+have a valid user, or assign a valid user to all unowned files and directories on
 the system with the \"chown\" command:
 
 # chown <user> <file>"
+
+  describe command('find / -xdev -fstype xfs -nouser') do
+    its('stdout.strip') { should match /^$/ }
+  end
 end

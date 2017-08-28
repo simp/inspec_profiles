@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide
+Status: Accepted
 
 This Security Technical Implementation Guide is published as a tool to improve
 the security of Department of Defense (DoD) information systems. The
@@ -12,19 +12,19 @@ Technology (NIST) 800-53 and related documents. Comments or proposed revisions
 to this document should be sent via email to the following address:
 disa.stig_spt@mail.mil.
 
-Release Date: 2017-03-08 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2017-03-08
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 control "V-72057" do
   title "Kernel core dumps must be disabled unless needed."
-  desc  "Kernel core dumps may contain the full contents of system memory at the 
-time of the crash. Kernel core dumps may consume a considerable amount of disk space 
-and may result in denial of service by exhausting the available space on the target 
+  desc  "Kernel core dumps may contain the full contents of system memory at the
+time of the crash. Kernel core dumps may consume a considerable amount of disk space
+and may result in denial of service by exhausting the available space on the target
 file system partition."
   impact 0.5
   tag "severity": "medium"
@@ -45,15 +45,19 @@ kdump.service - Crash recovery kernel arming
  Main PID: 1130 (code=exited, status=0/SUCCESS)
 kernel arming.
 
-If the \"kdump\" service is active, ask the System Administrator if the use of the 
-service is required and documented with the Information System Security Officer 
+If the \"kdump\" service is active, ask the System Administrator if the use of the
+service is required and documented with the Information System Security Officer
 (ISSO).
 
 If the service is active and is not documented, this is a finding."
-  tag "fix": "If kernel core dumps are not required, disable the \"kdump\" service 
+  tag "fix": "If kernel core dumps are not required, disable the \"kdump\" service
 with the following command:
 
 # systemctl disable kdump.service
 
 If kernel core dumps are required, document the need with the ISSO."
+
+  describe systemd_service('kdump.service') do
+    it { should_not be_running }
+  end
 end
