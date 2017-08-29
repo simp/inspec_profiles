@@ -65,7 +65,7 @@ Alternatively, the package can be reinstalled from trusted media using the comma
 
 # sudo rpm -Uvh <packagename>"
 
-  #describe command("rpm -Va | grep '^..5' | awk -F' ' '{ print $2 }'") do
-  #  its('stdout.strip') { should_not include 'b' }
-  #end
+  describe command("rpm -Va | grep '^..5' | awk -F' ' '{ print $2 }'") do
+    its('stdout.strip') { should_not include 'b' }
+  end
 end
