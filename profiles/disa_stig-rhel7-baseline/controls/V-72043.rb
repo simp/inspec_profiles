@@ -20,7 +20,7 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-RHEL7_FS_OPTS = attribute(
+rhel7_fs_opts = attribute(
   'rhel7_fs_opts',
   default: ['xfs', 'ext4', 'swap', 'tmpfs'],
   description: "File systems found in RHEL7 that don't correspond to removable media"
@@ -61,7 +61,7 @@ systems that are associated with removable media."
 
   file_systems.each do |file_sys_line|
     file_sys_arr = file_sys_line.gsub(/\s+/m, ' ').strip.split(' ')
-    if !"#{RHEL7_FS_OPTS}".include?("#{file_sys_arr[2]}") then
+    if !"#{rhel7_fs_opts}".include?("#{file_sys_arr[2]}") then
       describe mount("#{file_sys_arr[1]}") do
         its('options') { should include "nosuid" }
       end

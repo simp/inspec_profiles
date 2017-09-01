@@ -50,7 +50,7 @@ password lifetime:
   # @todo - filter on non-system accounts
   shadow.users.each do |user|
     describe shadow.users(user) do
-      its('min_days.to_i') { should cmp > 0 }
+      its('min_days') { should eq 1 }
     end
   end
 end

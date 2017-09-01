@@ -1,9 +1,9 @@
-# encoding: utf-8 
-# 
-=begin 
------------------ 
-Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide  
-Status: Accepted 
+# encoding: utf-8
+#
+=begin
+-----------------
+Benchmark: Red Hat Enterprise Linux 7 Security Technical Implementation Guide
+Status: Accepted
 
 This Security Technical Implementation Guide is published as a tool to improve
 the security of Department of Defense (DoD) information systems. The
@@ -12,18 +12,18 @@ Technology (NIST) 800-53 and related documents. Comments or proposed revisions
 to this document should be sent via email to the following address:
 disa.stig_spt@mail.mil.
 
-Release Date: 2017-03-08 
-Version: 1 
-Publisher: DISA 
-Source: STIG.DOD.MIL 
-uri: http://iase.disa.mil 
------------------ 
-=end 
+Release Date: 2017-03-08
+Version: 1
+Publisher: DISA
+Source: STIG.DOD.MIL
+uri: http://iase.disa.mil
+-----------------
+=end
 
 control "V-72027" do
-  title "All files and directories contained in local interactive user home 
+  title "All files and directories contained in local interactive user home
 directories must have mode 0750 or less permissive."
-  desc  "If a local interactive user files have excessive permissions, unintended 
+  desc  "If a local interactive user files have excessive permissions, unintended
 users may be able to access or modify them."
   impact 0.5
   tag "severity": "medium"
@@ -33,15 +33,15 @@ users may be able to access or modify them."
   tag "stig_id": "RHEL-07-020680"
   tag "cci": "CCI-000366"
   tag "nist": ["CM-6 b", "Rev_4"]
-  tag "check": "Verify all files and directories contained in a local interactive 
+  tag "check": "Verify all files and directories contained in a local interactive
 user home directory, excluding local initialization files, have a mode of \"0750\".
 
-Check the mode of all non-initialization files in a local interactive user home 
+Check the mode of all non-initialization files in a local interactive user home
 directory with the following command:
 
 Files that begin with a \".\" are excluded from this requirement.
 
-Note: The example will be for the user \"smithj\", who has a home directory of 
+Note: The example will be for the user \"smithj\", who has a home directory of
 \"/home/smithj\".
 
 # ls -lLR /home/smithj
@@ -50,11 +50,26 @@ Note: The example will be for the user \"smithj\", who has a home directory of
 -rw-r-x--- 1 smithj smithj 231 Mar  5 17:06 file3
 
 If any files are found with a mode more permissive than \"0750\", this is a finding."
-  tag "fix": "Set the mode on files and directories in the local interactive user 
+  tag "fix": "Set the mode on files and directories in the local interactive user
 home directory with the following command:
 
-Note: The example will be for the user smithj, who has a home directory of 
+Note: The example will be for the user smithj, who has a home directory of
 \"/home/smithj\" and is a member of the users group.
 
 # chmod 0750 /home/smithj/<file>"
+
+  # Assumption - users' home directories created in "home"
+  # Allows for mode 750 or less permissive
+  home_dirs = command('ls -d /home/*').stdout.split("\n")
+  home_dirs.each do |home|
+    home_files = command("find #{home} -xdev ! -name '.*' -type f -perm /027").stdout.split("\n")
+    home_files.each do |filename|
+      describe file(filename) do
+        it { should_not be_writable.by('group') }
+        it { should_not be_executable.by('others') }
+        it { should_not be_writable.by('others') }
+        it { should_not be_readable.by('others') }
+      end
+    end
+  end
 end

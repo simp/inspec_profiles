@@ -20,7 +20,7 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-LOG_PKG_PATH = attribute(
+log_pkg_path = attribute(
   'log_pkg_path',
   default: '/etc/rsyslog.conf',
   description: "The path to the logging package"
@@ -62,7 +62,7 @@ to send all \"rsyslog\" output to a log aggregation system:
 
 *.* @@<log aggregation system name>"
 
-  describe command("grep @ #{LOG_PKG_PATH}") do
+  describe command("grep @ #{log_pkg_path}") do
     its('stdout.strip') { should_not match /^$/}
   end
 end
