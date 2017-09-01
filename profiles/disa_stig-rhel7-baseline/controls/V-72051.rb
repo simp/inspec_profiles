@@ -20,7 +20,7 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-LOG_PKG_PATH = attribute(
+log_pkg_path = attribute(
   'log_pkg_path',
   default: '/etc/rsyslog.conf',
   description: "The path to the logging package"
@@ -75,10 +75,10 @@ Note: The line must be added before the following entry if it exists in
 *.* ~ # discards everything"
 
   describe.one do
-    describe command("grep cron #{LOG_PKG_PATH}") do
+    describe command("grep cron #{log_pkg_path}") do
       its('stdout.strip') { should match /^cron/ }
     end
-    describe file("#{LOG_PKG_PATH}") do
+    describe file("#{log_pkg_path}") do
       its('content') { should match /^\*\.\* \/var\/log\/messages\n?$/ }
       its('content') { should_not match /^*.*\s+~$.*^*\.\* \/var\/log\/messages\n?$/m}
     end

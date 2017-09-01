@@ -21,7 +21,7 @@ uri: http://iase.disa.mil
 =end
 
 # Will need to be changed to reflect list of authorized system accounts
-ADMIN_LOGINS = attribute(
+admin_logins = attribute(
   'admin_logins',
   default: [
     'system_u'
@@ -29,7 +29,7 @@ ADMIN_LOGINS = attribute(
   description: "System accounts that support approved system activities."
 )
 
-NON_ADMIN_LOGINS = attribute(
+non_admin_logins = attribute(
   'non_admin_logins',
   default: [
     '__default__'
@@ -124,7 +124,7 @@ Use the following command to map an existing user to the \"user_u\" role:
 
   semanage_results.each do |result|
     result = result.gsub(/\s_/m, ' ').strip.split(" ")
-    if ADMIN_LOGINS.include? "#{result[0]}"
+    if admin_logins.include? "#{result[0]}"
       describe.one do
         describe command("semanage login -l | grep #{result[1]}") do
           its('stdout') { should match /sysadm_u/ }
@@ -133,7 +133,7 @@ Use the following command to map an existing user to the \"user_u\" role:
           its('stdout') { should match /staff_u/ }
         end
       end
-    elsif NON_ADMIN_LOGINS.include? "#{result[0]}"
+    elsif non_admin_logins.include? "#{result[0]}"
       describe command("semanage login -l | grep #{result[1]}") do
         its('stdout') { should match /user_u/ }
       end

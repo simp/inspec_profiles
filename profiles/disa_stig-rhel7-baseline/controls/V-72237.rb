@@ -20,7 +20,7 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-CLIENT_ALIVE_INTERVAL = attribute(
+client_alive_interval = attribute(
   'client_alive_interval',
   default: '600',
   description: "Value expected for ClientAliveInterval in sshd_config"
@@ -82,6 +82,6 @@ ClientAliveInterval 600
 The SSH service must be restarted for changes to take effect."
 
   describe sshd_config do
-    its('ClientAliveInterval') { should cmp CLIENT_ALIVE_INTERVAL }
+    its('ClientAliveInterval') { should cmp client_alive_interval }
   end
 end

@@ -20,7 +20,7 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-MFA_PKG_LIST = attribute(
+mfa_pkg_list = attribute(
     'mfa_pkg_list',
     description: 'The list of packages needed for MFA on RHEL',
     default: [
@@ -102,7 +102,7 @@ control "V-72417" do
 
   # yum install esc pam_pkcs11 authconfig-gtk"
 
-  MFA_PKG_LIST.each do |pkg|
+  mfa_pkg_list.each do |pkg|
     describe package("#{pkg}") do
       it { should be_installed }
     end

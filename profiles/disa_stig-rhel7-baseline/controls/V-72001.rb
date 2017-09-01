@@ -21,7 +21,7 @@ uri: http://iase.disa.mil
 =end
 
 # Will need to be changed to reflect list of authorized system accounts
-SYSTEM_ACCOUNTS = attribute(
+system_accounts = attribute(
   'system_accounts',
   default: [
     'root',
@@ -77,6 +77,6 @@ normal user to perform administrative-level actions.
 Document all authorized accounts on the system."
 
   describe passwd do
-    its('users') { should be_in SYSTEM_ACCOUNTS }
+    its('users') { should be_in system_accounts }
   end
 end

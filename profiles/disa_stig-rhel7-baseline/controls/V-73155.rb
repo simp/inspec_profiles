@@ -20,7 +20,7 @@ uri: http://iase.disa.mil
 -----------------
 =end
 
-SYSTEM_DB_PATH = attribute(
+system_db_path = attribute(
   'system_db_path',
   default: '/etc/dconf/db/local.d',
   description: "Path to the system database"
@@ -89,7 +89,7 @@ Add the setting to lock the screensaver lock delay:
 /org/gnome/desktop/screensaver/lock-delay"
 
   # @todo - dynamically gather system_db_path?
-  describe command("grep -i lock_delay #{SYSTEM_DB_PATH}/locks/*") do
+  describe command("grep -i lock_delay #{system_db_path}/locks/*") do
     its('stdout.strip') { should_not match /^$/ }
   end
   only_if { package('gnome-desktop3').installed? }
