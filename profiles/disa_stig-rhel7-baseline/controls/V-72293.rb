@@ -44,7 +44,7 @@ net.ipv4.conf.all.send_redirects=0
 
 If the returned line does not have a value of \"0\", or a line is not returned, this
 is a finding."
-  tag "fix": "Configure the system to not allow interfaces to perform IPv4 ICMP 
+  tag "fix": "Configure the system to not allow interfaces to perform IPv4 ICMP
 redirects.
 
 Set the system to the required kernel parameter by adding the following line to
