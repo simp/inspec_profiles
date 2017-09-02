@@ -35,6 +35,7 @@ expand the audit record storage capacity before records are lost."
   tag "stig_id": "RHEL-07-030340"
   tag "cci": "CCI-001855"
   tag "nist": ["AU-5 (1)", "Rev_4"]
+  tag "subsystems": ['audit', 'auditd']
   tag "check": "Verify the operating system immediately notifies the SA and ISSO (at
 a minimum) via email when the allocated audit record storage volume reaches 75
 percent of the repository maximum audit record storage capacity.
@@ -57,6 +58,6 @@ and set it to \"email\".
 space_left_action = email"
 
   describe auditd_conf do
-    its('space_left_action') { should cmp 'email' }
+    its('space_left_action.downcase') { should cmp('email') }
   end
 end

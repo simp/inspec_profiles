@@ -32,6 +32,7 @@ from failures resulting from a file system becoming full or failing."
   tag "stig_id": "RHEL-07-021330"
   tag "cci": "CCI-000366"
   tag "nist": ["CM-6 b", "Rev_4"]
+  tag "subsystems": ['aide']
   tag "check": "Verify the file integrity tool is configured to use FIPS 140-2
 approved cryptographic hashes for validating file contents and directories.
 

@@ -40,6 +40,7 @@ storage capacity.
   tag "stig_id": "RHEL-07-030300"
   tag "cci": "CCI-001851"
   tag "nist": ["AU-4 (1)", "Rev_4"]
+  tag "subsystems": ['audit', 'auditd', 'audisp']
   tag "check": "Verify the operating system off-loads audit records onto a different
 system or media from the system being audited.
 
@@ -62,6 +63,6 @@ Set the remote server option in \"/etc/audisp/audisp-remote.conf\" with the IP
 address of the log aggregation server."
 
   describe parse_config_file('/etc/audisp/audisp-remote.conf') do
-    its('remote_server') { should match /^.+$/ }
+    its('remote_server') { should match(/^\S+$/) }
   end
 end

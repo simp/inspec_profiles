@@ -41,6 +41,7 @@ system (e.g., module or policy filter).
   tag "stig_id": "RHEL-07-030840"
   tag "cci": "CCI-000172"
   tag "nist": ["AU-12 c", "Rev_4"]
+  tag "subsystems": ['audit', 'auditd', 'audit_rule']
   tag "check": "Verify the operating system generates audit records when
 successful/unsuccessful attempts to use the \"insmod\" command occur.
 
@@ -63,4 +64,10 @@ those that do not match the CPU architecture):
 -w /sbin/insmod -p x -F auid!=4294967295 -k module-change
 
 The audit daemon must be restarted for the changes to take effect."
+
+  # Need to figure out a better way to do this.
+  libraries = File.join(File.dirname(File.dirname(source)), 'libraries')
+  eval(File.read(File.join(libraries, '/profile_helper/audit.rb')))
+
+  check_paths('/sbin/insmod', 'x')
 end

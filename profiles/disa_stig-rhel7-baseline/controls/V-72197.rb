@@ -49,6 +49,7 @@ SRG-OS-000476-GPOS-0022.
   tag "nist": ["AC-2 (4)", "Rev_4"]
   tag "cci": "CCI-002130"
   tag "nist": ["AC-2 (4)", "Rev_4"]
+  tag "subsystems": ['audit', 'auditd', 'audit_rule']
   tag "check": "Verify the operating system must generate audit records for all
 account creations, modifications, disabling, and termination events that affect
 \"/etc/passwd\".
@@ -70,4 +71,10 @@ Add or update the following rule \"/etc/audit/rules.d/audit.rules\":
 -w /etc/passwd -p wa -k identity
 
 The audit daemon must be restarted for the changes to take effect."
+
+  # Need to figure out a better way to do this.
+  libraries = File.join(File.dirname(File.dirname(source)), 'libraries')
+  eval(File.read(File.join(libraries, '/profile_helper/audit.rb')))
+
+  check_paths('/etc/passwd', 'wa')
 end

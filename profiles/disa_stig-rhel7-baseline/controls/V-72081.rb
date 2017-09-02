@@ -49,6 +49,7 @@ combined), or both.
   tag "stig_id": "RHEL-07-030010"
   tag "cci": "CCI-000139"
   tag "nist": ["AU-5 a", "Rev_4"]
+  tag "subsystems": ['audit', 'auditd']
   tag "check": "Confirm the audit configuration regarding how auditing processing
 failures are handled.
 
@@ -88,4 +89,12 @@ the following command:
 Kernel log monitoring must also be configured to properly alert designated staff.
 
 The audit daemon must be restarted for the changes to take effect."
+
+  describe auditd_rules do
+    context 'failure mode' do
+      it 'should be "1" or "2"' do
+        expect(auditd_rules.status['failure']).to match(/^(1|2)$/)
+      end
+    end
+  end
 end

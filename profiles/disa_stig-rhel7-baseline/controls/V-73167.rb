@@ -45,6 +45,7 @@ system (e.g., module or policy filter).
   tag "nist": ["AC-2 (4)", "Rev_4"]
   tag "cci": "CCI-002130"
   tag "nist": ["AC-2 (4)", "Rev_4"]
+  tag "subsystems": ['audit', 'auditd', 'audit_rule']
   tag "check": "Verify the operating system must generate audit records for all
 account creations, modifications, disabling, and termination events that affect
 \"/etc/gshadow\".
@@ -67,8 +68,9 @@ Add or update the following rule in \"/etc/audit/rules.d/audit.rules\":
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe auditd_rules do
-    its('lines') { should contain_match(%r{^\s-w\s/etc/gshadow\s-p\swa\s-k\sidentity$}) }
-  end
-  only_if { package('audit').installed? }
+  # Need to figure out a better way to do this.
+  libraries = File.join(File.dirname(File.dirname(source)), 'libraries')
+  eval(File.read(File.join(libraries, '/profile_helper/audit.rb')))
+
+  check_paths('/etc/gshadow', 'wa')
 end

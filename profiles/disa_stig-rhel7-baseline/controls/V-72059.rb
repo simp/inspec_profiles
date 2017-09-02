@@ -62,13 +62,26 @@ If a separate entry for the file system/partition that contains the non-privileg
 interactive users' home directories does not exist, this is a finding."
   tag "fix": "Migrate the \"/home\" directory onto a separate file system/partition."
 
-  non_priv_users = command('cut -d: -f 1,3,6 /etc/passwd | egrep ":[1-4][0-9]{3}"').stdout.split("\n")
-  non_priv_users.each do |user|
-    home_dir = user.split(':')
-    fs_part = home_dir.last.split('/')
-    describe command("grep /#{fs_part[1]} /etc/fstab") do
-      its('stdout.strip') { should match /^.*\s+\/#{fs_part[1]}/ }
-      its('stdout.strip') { should_not match /^#.*\s+\/#{fs_part[1]}/ }
+  login_defs = file('/etc/login.defs')
+
+  only_if { login_defs.exist? }
+
+  min_uid = 1000
+  if login_defs.content && login_defs.content.match(/^\s*UID_MIN\s+(\d+)\s*$/)
+    min_uid = $1.to_i
+  end
+
+  users.where { (uid >= min_uid) && (shell !~ /\/nologin$/ ) }.entries.each do |user|
+
+    home_mount = command(%(df #{user.home} --output=target | tail -1)).stdout.strip
+
+    describe user.username do
+      context 'with mountpoint' do
+        context home_mount do
+          it { should_not be_empty }
+          it { should_not match(%r(^/$)) }
+        end
+      end
     end
   end
 end

@@ -35,6 +35,7 @@ expand the audit record storage capacity before records are lost."
   tag "stig_id": "RHEL-07-030350"
   tag "cci": "CCI-001855"
   tag "nist": ["AU-5 (1)", "Rev_4"]
+  tag "subsystems": ['audit', 'auditd']
   tag "check": "Verify the operating system immediately notifies the SA and ISSO (at
 a minimum) via email when the threshold for the repository maximum audit record
 storage capacity is reached.
@@ -57,6 +58,6 @@ set it to root and any other accounts associated with security personnel.
 action_mail_acct = root"
 
   describe auditd_conf  do
-    its('action_mail_acct') { should cmp 'root' }
+    its('action_mail_acct') { should cmp('root') }
   end
 end

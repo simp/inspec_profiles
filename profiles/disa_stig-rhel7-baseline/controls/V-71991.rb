@@ -45,6 +45,7 @@ verification/testing and/or systems and environments that require this functiona
   tag "nist": ["AC-3 (4)", "Rev_4"]
   tag "cci": "CCI-002696"
   tag "nist": ["SI-6 a", "Rev_4"]
+  tag "subsystems": ['selinux']
   tag "check": "Verify the operating system verifies correct operation of all
 security functions.
 

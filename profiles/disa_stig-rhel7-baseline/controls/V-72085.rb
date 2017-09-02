@@ -40,6 +40,7 @@ storage capacity.
   tag "stig_id": "RHEL-07-030310"
   tag "cci": "CCI-001851"
   tag "nist": ["AU-4 (1)", "Rev_4"]
+  tag "subsystems": ['audit', 'auditd', 'audisp']
   tag "check": "Verify the operating system encrypts audit records off-loaded onto a
 different system or media from the system being audited.
 
@@ -63,6 +64,6 @@ it with the following line:
 enable_krb5 = yes"
 
   describe parse_config_file('/etc/audisp/audisp-remote.conf') do
-    its('enable_krb5') { should cmp 'yes' }
+    its('enable_krb5.strip') { should cmp('yes') }
   end
 end

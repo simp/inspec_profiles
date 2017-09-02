@@ -50,3 +50,7 @@ by removing the \"ypserv\" package from the system with the following command:
     it { should_not be_installed }
   end
 end
+
+describe package('ypserv') do
+  it { should_not be_installed }
+end

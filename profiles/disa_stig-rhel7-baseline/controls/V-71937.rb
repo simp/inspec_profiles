@@ -60,3 +60,11 @@ prevent logons with empty passwords and run the \"authconfig\" command."
     end
   end
 end
+
+nullok_files = command(%(grep -rle 'pam_unix.so .*nullok' /etc/pam.d/*)).stdout.lines.map(&:strip)
+
+describe 'PAM authorization files' do
+  context nullok_files do
+    it { should be_empty }
+  end
+end

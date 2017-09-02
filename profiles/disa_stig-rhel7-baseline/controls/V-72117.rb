@@ -41,6 +41,7 @@ SRG-OS-000064-GPOS-0003.
   tag "stig_id": "RHEL-07-030470"
   tag "cci": "CCI-000172"
   tag "nist": ["AU-12 c", "Rev_4"]
+  tag "subsystems": ['audit', 'auditd', 'audit_rule']
   tag "check": "Verify the operating system generates audit records when
 successful/unsuccessful attempts to use the \"removexattr\" command occur.
 
@@ -73,4 +74,10 @@ perm_mod
 perm_mod
 
 The audit daemon must be restarted for the changes to take effect."
+
+  # Need to figure out a better way to do this.
+  libraries = File.join(File.dirname(File.dirname(source)), 'libraries')
+  eval(File.read(File.join(libraries, '/profile_helper/audit.rb')))
+
+  check_syscalls('removexattr')
 end

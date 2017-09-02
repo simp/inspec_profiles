@@ -39,6 +39,7 @@ failure."
   tag "stig_id": "RHEL-07-031000"
   tag "cci": "CCI-000366"
   tag "nist": ["CM-6 b", "Rev_4"]
+  tag "subsystems": ['audit', 'auditd', 'rsyslog']
   tag "check": "Verify \"rsyslog\" is configured to send all messages to a log
 aggregation server.
 
@@ -63,6 +64,6 @@ to send all \"rsyslog\" output to a log aggregation system:
 *.* @@<log aggregation system name>"
 
   describe command("grep @ #{log_pkg_path}") do
-    its('stdout.strip') { should_not match /^$/}
+    its('stdout.strip') { should_not be_empty }
   end
 end

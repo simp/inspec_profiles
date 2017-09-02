@@ -36,6 +36,8 @@ threats and the advanced persistent threat."
   tag "stig_id": "RHEL-07-030360"
   tag "cci": "CCI-002234"
   tag "nist": ["AC-6 (9)", "Rev_4"]
+  tag "subsystems": ['audit', 'auditd', 'audit_rule']
+  tag "filesystem_heavy": true
   tag "check": "Verify the operating system audits the execution of privileged
 functions.
 
@@ -71,4 +73,13 @@ the full path to each \"setuid\"/\"setgid\" program in the list:
 
 -a always,exit -F <suid_prog_with_full_path> -F perm=x -F auid>=1000 -F
 auid!=4294967295 -k setuid/setgid"
+
+  # Need to figure out a better way to do this.
+  libraries = File.join(File.dirname(File.dirname(source)), 'libraries')
+  eval(File.read(File.join(libraries, '/profile_helper/audit.rb')))
+
+  # Tried to make this as safe as possible
+  target_files = command(%(find / -xautofs -noleaf -wholename '/proc' -prune -o -wholename '/sys' -prune -o -wholename '/dev' -prune -o -type f \\( -perm -4000 -o -perm -2000 \\) -print 2>/dev/null)).stdout.strip.lines
+
+  check_paths(target_files, 'x')
 end

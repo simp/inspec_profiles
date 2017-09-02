@@ -78,3 +78,19 @@ localpkg_gpgcheck=1"
     its('localpkg_gpgcheck') { should cmp '1' }
   end
 end
+
+yum_conf = file('/etc/yum.conf')
+
+describe yum_conf.path do
+  context yum_conf do
+    it { should exist }
+  end
+
+  if yum_conf.exist?
+    context '[main]' do
+      context 'gpgcheck' do
+        it { expect( ini(yum_conf.path)['main'][subject] ).to cmp 1 }
+      end
+    end
+  end
+end

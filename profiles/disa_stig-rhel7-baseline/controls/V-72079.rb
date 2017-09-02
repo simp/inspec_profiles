@@ -52,6 +52,7 @@ SRG-OS-000042-GPOS-00021, SRG-OS-000254-GPOS-00095, SRG-OS-000255-GPOS-0009.
   tag "nist": ["AU-2 d", "Rev_4"]
   tag "cci": "CCI-000131"
   tag "nist": ["AU-3", "Rev_4"]
+  tag "subsystems": ['audit', 'auditd']
   tag "check": "Verify the operating system produces audit records containing
 information to establish when (date and time) the events occurred.
 
@@ -68,7 +69,7 @@ Enable the auditd service with the following command:
 
 # chkconfig auditd on"
 
-  describe systemd_service('auditd.service') do
+  describe service('auditd') do
     it { should be_running }
   end
 end
