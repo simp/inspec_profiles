@@ -63,3 +63,7 @@ users from being able to assign themselves empty passwords."
     end
   end
 end
+
+describe sshd_config do
+  its('PermitEmptyPasswords') { should eq 'no' }
+end

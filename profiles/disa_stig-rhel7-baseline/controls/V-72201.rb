@@ -40,6 +40,7 @@ SRG-OS-000468-GPOS-00212, SRG-OS-000392-GPOS-0017.
   tag "nist": ["AU-12 c", "Rev_4"]
   tag "cci": "CCI-002884"
   tag "nist": ["MA-4 (1) (a)", "Rev_4"]
+  tag "subsystems": ['audit', 'auditd', 'audit_rule']
   tag "check": "Verify the operating system generates audit records when
 successful/unsuccessful attempts to use the \"renameat\" command occur.
 
@@ -69,4 +70,10 @@ do not match the CPU architecture):
 -k delete
 
 The audit daemon must be restarted for the changes to take effect."
+
+  # Need to figure out a better way to do this.
+  libraries = File.join(File.dirname(File.dirname(source)), 'libraries')
+  eval(File.read(File.join(libraries, '/profile_helper/audit.rb')))
+
+  check_syscalls('renameat')
 end

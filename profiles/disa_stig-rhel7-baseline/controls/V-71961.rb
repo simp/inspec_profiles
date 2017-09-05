@@ -73,3 +73,12 @@ Generate a new \"grub.conf\" file with the new password with the following comma
     its('stdout') { should match /password_pbkdf2 root .*$/ }
   end
 end
+
+user_cfg = file('/boot/grub2/user.cfg')
+
+describe user_cfg do
+  it { should exist }
+  if user_cfg.exist?
+    its('content') { should match(/^GRUB2_PASSWORD=grub\.pbkdf2\.sha\d+\.\d+\..+/) }
+  end
+end

@@ -41,6 +41,7 @@ SRG-OS-000064-GPOS-0003.
   tag "stig_id": "RHEL-07-030450"
   tag "cci": "CCI-000172"
   tag "nist": ["AU-12 c", "Rev_4"]
+  tag "subsystems": ['audit', 'auditd', 'audit_rule']
   tag "check": "Verify the operating system generates audit records when
 successful/unsuccessful attempts to use the \"fsetxattr\" command occur.
 
@@ -69,4 +70,10 @@ those that do not match the CPU architecture):
 -a always,exit -F arch=b64 -S fsetxattr -F auid>=1000 -F auid!=4294967295 -k perm_mod
 
 The audit daemon must be restarted for the changes to take effect."
+
+  # Need to figure out a better way to do this.
+  libraries = File.join(File.dirname(File.dirname(source)), 'libraries')
+  eval(File.read(File.join(libraries, '/profile_helper/audit.rb')))
+
+  check_syscalls('fsetxattr')
 end

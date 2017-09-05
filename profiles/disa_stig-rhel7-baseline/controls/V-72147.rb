@@ -46,6 +46,7 @@ SRG-OS-000473-GPOS-0021.
   tag "nist": ["AU-12 c", "Rev_4"]
   tag "cci": "CCI-002884"
   tag "nist": ["MA-4 (1) (a)", "Rev_4"]
+  tag "subsystems": ['audit', 'auditd', 'audit_rule']
   tag "check": "Verify the operating system generates audit records when successful
 account access events occur.
 
@@ -65,4 +66,10 @@ Add or update the following rule in \"/etc/audit/rules.d/audit.rules\":
 -w /var/log/lastlog -p wa -k logins
 
 The audit daemon must be restarted for the changes to take effect."
+
+  # Need to figure out a better way to do this.
+  libraries = File.join(File.dirname(File.dirname(source)), 'libraries')
+  eval(File.read(File.join(libraries, '/profile_helper/audit.rb')))
+
+  check_paths('/var/log/lastlog', 'wa')
 end

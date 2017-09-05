@@ -41,6 +41,7 @@ system (e.g., module or policy filter).
   tag "stig_id": "RHEL-07-030830"
   tag "cci": "CCI-000172"
   tag "nist": ["AU-12 c", "Rev_4"]
+  tag "subsystems": ['audit', 'auditd', 'audit_rule']
   tag "check": "Verify the operating system generates audit records when
 successful/unsuccessful attempts to use the \"delete_module\" command occur.
 
@@ -70,4 +71,10 @@ those that do not match the CPU architecture):
 -a always,exit -F arch=b64 -S delete_module -k module-change
 
 The audit daemon must be restarted for the changes to take effect."
+
+  # Need to figure out a better way to do this.
+  libraries = File.join(File.dirname(File.dirname(source)), 'libraries')
+  eval(File.read(File.join(libraries, '/profile_helper/audit.rb')))
+
+  check_syscalls('delete_module')
 end

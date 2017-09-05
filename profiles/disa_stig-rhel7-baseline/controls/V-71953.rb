@@ -58,7 +58,13 @@ section of the \"/etc/gdm/custom.conf\" file to \"false\":
 [daemon]
 AutomaticLoginEnable=false"
 
-  describe parse_config_file("/etc/gdm/custom.conf") do
-    its('AutomaticLoginEnable') { should eq 'false' }
+  custom_conf = file('/etc/gdm/custom.conf')
+
+  only_if { custom_conf.exist? }
+
+  describe "In #{custom_conf.path}:[daemon]" do
+    context 'AutomaticLoginEnable' do
+      it { expect(ini(custom_conf.path)['daemon'][subject]).to cmp 'false' }
+    end
   end
 end

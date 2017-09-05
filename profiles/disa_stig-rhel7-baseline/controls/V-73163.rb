@@ -33,6 +33,7 @@ remote system will minimize the possibility of losing audit records."
   tag "stig_id": "RHEL-07-030321"
   tag "cci": "CCI-001851"
   tag "nist": ["AU-4 (1)", "Rev_4"]
+  tag "subsystems": ['audit', 'auditd', 'audisp']
   tag "check": "Verify the action the operating system takes if there is an error
 sending audit records to a remote system.
 
@@ -53,6 +54,6 @@ Uncomment the \"network_failure_action\" option in
 network_failure_action = single"
 
   describe parse_config_file('/etc/audisp/audisp-remote.conf') do
-    its('network_failure_action') { should cmp 'stop' }
+    its('network_failure_action.strip') { should cmp('stop') }
   end
 end

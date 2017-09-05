@@ -45,6 +45,7 @@ verification/testing and/or systems and environments that require this functiona
   tag "nist": ["AC-3 (4)", "Rev_4"]
   tag "cci": "CCI-002696"
   tag "nist": ["SI-6 a", "Rev_4"]
+  tag "subsystems": ['selinux']
   tag "check": "Verify the operating system verifies correct operation of all
 security functions.
 
@@ -66,6 +67,6 @@ A reboot is required for the changes to take effect."
 
   #@todo - SELinux resource?? (https://github.com/chef/inspec/issues/534)
   describe command('getenforce') do
-    its('stdout') { should match /^Enforcing\n?$/ }
+    its('stdout'.strip) { should match(%r{^Enforcing$}) }
   end
 end

@@ -38,6 +38,7 @@ Limits are imposed by locking the account.
   tag "stig_id": "RHEL-07-010320"
   tag "cci": "CCI-002238"
   tag "nist": ["AC-7 b", "Rev_4"]
+  tag "subsystems": ['pam']
   tag "check": "Verify the operating system automatically locks an account for the
 maximum period for which the system can be configured.
 
@@ -67,10 +68,14 @@ fail_interval=900 unlock_time=604800
 
 and run the \"authconfig\" command."
 
-  describe file('/etc/pam.d/password-auth-ac') do
-    its('content') { should match /^auth\s+required\s+pam_faillock.so\s.*unlock_time=604800/ }
+  auth_file = file('/etc/pam.d/password-auth-ac')
+
+  only_if { auth_file.exist? }
+
+  describe auth_file do
+    its('content') { should match(/^auth\s+required\s+pam_faillock.so\s.*unlock_time=604800/) }
   end
-  describe file('/etc/pam.d/password-auth-ac') do
-    its('content') { should match /^auth\s+\[default=die\]\s+pam_faillock.so\s.*unlock_time=604800/ }
+  describe auth_file do
+    its('content') { should match(/^auth\s+\[default=die\]\s+pam_faillock.so\s.*unlock_time=604800/) }
   end
 end

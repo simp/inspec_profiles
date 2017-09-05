@@ -40,6 +40,7 @@ confidentiality of the key used to generate the hash.
   tag "stig_id": "RHEL-07-010020"
   tag "cci": "CCI-000663"
   tag "nist": ["SA-7", "Rev_3"]
+  tag "subsystems": ['rpm', 'package']
   tag "check": "Verify the cryptographic hash of system files and commands match the
 vendor values.
 

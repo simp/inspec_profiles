@@ -36,6 +36,7 @@ capacity expansion."
   tag "stig_id": "RHEL-07-030330"
   tag "cci": "CCI-001855"
   tag "nist": ["AU-5 (1)", "Rev_4"]
+  tag "subsystems": ['audit', 'auditd']
   tag "check": "Verify the operating system immediately notifies the SA and ISSO (at
 a minimum) when allocated audit record storage volume reaches 75 percent of the
 repository maximum audit record storage capacity.
@@ -85,22 +86,27 @@ example being \"/var/log/audit/\"):
 Set the value of the \"space_left\" keyword in \"/etc/audit/auditd.conf\" to 75
 percent of the partition size."
 
-  # @todo - cleanup and possibly create range
-  log_file_result = command('grep log_file /etc/audit/auditd.conf').stdout.split("\n")
-  log_file_path = nil
-  log_file_result.each do |curr_line|
-    split_line = curr_line.delete(' ').split('=')
-    if split_line.first == 'log_file' then log_file_path = split_line.last end
-  end
-
-  comm_results = command('df -h /var/log/audit/').stdout.split("\n")
-  partition_sz_arr = comm_results.last.gsub(/\s+/m, ' ').strip.split(" ")
-  # Get partition size in GB
-  partition_sz = partition_sz_arr[1].gsub(/G/, '')
-  # Convert to MB and get 25%
-  exp_space_left = partition_sz.to_i * 1024 / 4
-
   describe auditd_conf do
-    its('space_left.to_i') { should cmp exp_space_left }
+    before(:all) do
+      @audit_log_dir = File.dirname(auditd_conf.log_file)
+
+      if File.directory?(@audit_log_dir)
+        partition_info = command("df -h #{@audit_log_dir}").stdout.split("\n")
+
+        partition_sz_arr = partition_info.last.gsub(/\s+/m, ' ').strip.split(" ")
+
+        # Get partition size in GB
+        partition_sz = partition_sz_arr[1].gsub(/G/, '')
+
+        # Convert to MB and get 25%
+        @exp_space_left = partition_sz.to_i * 1024 / 4
+      end
+    end
+
+    it 'should have an audit log directory' do
+      expect(File.directory?(@audit_log_dir)).to be true
+    end
+
+    its('space_left.to_i') { should cmp(@exp_space_left) }
   end
 end

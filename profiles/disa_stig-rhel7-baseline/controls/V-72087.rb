@@ -33,6 +33,7 @@ minimize the possibility of losing audit records."
   tag "stig_id": "RHEL-07-030320"
   tag "cci": "CCI-001851"
   tag "nist": ["AU-4 (1)", "Rev_4"]
+  tag "subsystems": ['audit', 'auditd']
   tag "check": "Verify the action the operating system takes if the disk the audit
 records are written to becomes full.
 
@@ -67,10 +68,10 @@ Uncomment the \"network_failure_action\" option in
 \"halt\"."
 
   describe parse_config_file('/etc/audisp/audisp-remote.conf') do
-    its('disk_full_action') { should match /^(syslog|single|halt)$/ }
+    its('disk_full_action'.strip) { should match(/^(syslog|single|halt)$/) }
   end
 
   describe file('/etc/audisp/audisp-remote.conf') do
-    its('network_failure_action') { should match /^(syslog|single|halt)$/}
+    its('network_failure_action'.strip) { should match(/^(syslog|single|halt)$/) }
   end
 end

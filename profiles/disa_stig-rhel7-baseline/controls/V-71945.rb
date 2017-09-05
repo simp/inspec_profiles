@@ -38,6 +38,7 @@ Limits are imposed by locking the account.
   tag "stig_id": "RHEL-07-010330"
   tag "cci": "CCI-002238"
   tag "nist": ["AC-7 b", "Rev_4"]
+  tag "subsystems": ['pam']
   tag "check": "Verify the operating system automatically locks the root account
 until it is released by an administrator when three unsuccessful logon attempts in
 15 minutes are made.

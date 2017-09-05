@@ -110,8 +110,9 @@ the number of characters that can be displayed in the banner:
   [org/gnome/login-screen]
   banner-message-enable=true"
 
-  describe command("grep banner-message-enable /etc/dconf/db/local.d/*") do
-    its('stdout.strip') { should cmp 'banner-message-enable=true' }
+  only_if { command('dconf').exist? or file('/etc/gdm/custom.conf').exist? }
+
+  describe command("dconf read /org/gnome/login-screen/banner-mesage-enable") do
+    its('stdout'.strip) { should eq 'true'}
   end
-  only_if { package('gnome-desktop3').installed? }
 end

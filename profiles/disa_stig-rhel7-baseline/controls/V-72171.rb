@@ -42,6 +42,7 @@ reconstruct events to determine the cause and impact of compromise.
   tag "nist": ["AU-3 (1)", "Rev_4"]
   tag "cci": "CCI-002884"
   tag "nist": ["MA-4 (1) (a)", "Rev_4"]
+  tag "subsystems": ['audit', 'auditd', 'audit_rule']
   tag "check": "Verify the operating system generates audit records when
 successful/unsuccessful attempts to use the \"mount\" command occur.
 
@@ -70,4 +71,10 @@ privileged-mount
 privileged-mount
 
 The audit daemon must be restarted for the changes to take effect."
+
+  # Need to figure out a better way to do this.
+  libraries = File.join(File.dirname(File.dirname(source)), 'libraries')
+  eval(File.read(File.join(libraries, '/profile_helper/audit.rb')))
+
+  check_syscalls('mount')
 end
