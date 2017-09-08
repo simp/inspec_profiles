@@ -65,9 +65,16 @@ auid!=4294967295 -k privileged-priv_change
 
 The audit daemon must be restarted for the changes to take effect."
 
-  # Need to figure out a better way to do this.
-  libraries = File.join(File.dirname(File.dirname(source)), 'libraries')
-  eval(File.read(File.join(libraries, '/profile_helper/audit.rb')))
+  # Resource creates data structure including all usages of file
+  @perms = auditd.file('/usr/bin/setsebool').permissions
 
-  check_paths('/usr/sbin/setsebool', 'x')
+  @perms.each do |perm|
+    describe perm do
+      it { should include 'x' }
+    end
+  end
+  describe auditd.file('/usr/bin/setsebool') do
+    its('action') { should_not include 'never' }
+  end
+  only_if { file('/etc/sudoers').exist? }
 end
