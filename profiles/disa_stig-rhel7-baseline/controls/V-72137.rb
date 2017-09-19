@@ -65,16 +65,20 @@ auid!=4294967295 -k privileged-priv_change
 
 The audit daemon must be restarted for the changes to take effect."
 
+  @audit_file = '/usr/sbin/setsebool'
+
+  describe auditd.file(@audit_file) do
+    its('permissions') { should_not cmp [] }
+    its('action') { should_not include 'never' }
+  end
+
   # Resource creates data structure including all usages of file
-  @perms = auditd.file('/usr/bin/setsebool').permissions
+  @perms = auditd.file(@audit_file).permissions
 
   @perms.each do |perm|
     describe perm do
       it { should include 'x' }
     end
   end
-  describe auditd.file('/usr/bin/setsebool') do
-    its('action') { should_not include 'never' }
-  end
-  only_if { file('/etc/sudoers').exist? }
+  only_if { file(@audit_file).exist? }
 end

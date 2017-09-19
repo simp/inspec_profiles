@@ -46,10 +46,11 @@ lifetime restriction.
 
 # chage -M 60 [user]"
 
-  # @todo - filter on non-system accounts
   shadow.users.each do |user|
+    # filtering on non-system accounts (uid >= 1000)
+    next unless user(user).uid >= 1000
     describe shadow.users(user) do
-      its('max_days.to_i') { should cmp <= 60 }
+      its('max_days.first.to_i') { should cmp <= 60 }
     end
   end
 end

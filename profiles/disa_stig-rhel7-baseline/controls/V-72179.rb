@@ -68,9 +68,20 @@ auid!=4294967295 -k privileged-ssh
 
 The audit daemon must be restarted for the changes to take effect."
 
-  # Need to figure out a better way to do this.
-  libraries = File.join(File.dirname(File.dirname(source)), 'libraries')
-  eval(File.read(File.join(libraries, '/profile_helper/audit.rb')))
+  @audit_file = '/usr/libexec/openssh/ssh-keysign'
 
-  check_paths('/usr/libexec/openssh/ssh-keysign', 'x')
+  describe auditd.file(@audit_file) do
+    its('permissions') { should_not cmp [] }
+    its('action') { should_not include 'never' }
+  end
+
+  # Resource creates data structure including all usages of file
+  @perms = auditd.file(@audit_file).permissions
+
+  @perms.each do |perm|
+    describe perm do
+      it { should include 'x' }
+    end
+  end
+  only_if { file(@audit_file).exist? }
 end

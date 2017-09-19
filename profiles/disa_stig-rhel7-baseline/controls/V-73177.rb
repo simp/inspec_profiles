@@ -22,8 +22,7 @@ uri: http://iase.disa.mil
 
 control "V-73177" do
   title "Wireless network adapters must be disabled."
-  desc
-    "The use of wireless networking can introduce many different attack vectors
+  desc "The use of wireless networking can introduce many different attack vectors
     into the organization's network. Common attack vectors such as malicious
     association and ad hoc networks will allow an attacker to spoof a wireless
     access point (AP), allowing validated systems to connect to the malicious AP
