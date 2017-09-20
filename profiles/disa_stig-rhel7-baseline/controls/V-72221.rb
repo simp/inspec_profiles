@@ -79,7 +79,11 @@ Ciphers aes128-ctr,aes192-ctr,aes256-ctr
 
 The SSH service must be restarted for changes to take effect."
 
-  @ciphers_array = inspec.sshd_config.params['ciphers'].first.split(",")
+  @ciphers_array = inspec.sshd_config.params['ciphers']
+
+  unless @ciphers_array.nil?
+    @ciphers_array = @ciphers_array.first.split(",")
+  end
 
   describe @ciphers_array do
     it { should be_in ['aes128-ctr', 'aes192-ctr', 'aes256-ctr'] }
