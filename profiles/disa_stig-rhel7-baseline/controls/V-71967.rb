@@ -63,7 +63,3 @@ by removing the rsh-server package from the system with the following command:
     it { should_not be_installed }
   end
 end
-
-describe package('rsh-server') do
-  it { should_not be_installed }
-end

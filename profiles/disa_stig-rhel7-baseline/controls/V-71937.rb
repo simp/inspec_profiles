@@ -49,22 +49,11 @@ authenticating.
 Remove any instances of the \"nullok\" option in \"/etc/pam.d/system-auth-ac\" to
 prevent logons with empty passwords and run the \"authconfig\" command."
 
-  describe.one do
-    # case when nullok doesn't exist in system-auth-ac
-    describe command("grep nullok /etc/pam.d/system-auth-ac") do
-      its('stdout') { should match /^$/}
-    end
-   # case when nullok is commented out
-   describe command("grep nullok /etc/pam.d/system-auth-ac") do
-      its('stdout') { should match /^#\s+nullok\s+.*$/ }
-    end
-  end
-end
+  nullok_files = command(%(grep -rle 'pam_unix.so .*nullok' /etc/pam.d/*)).stdout.lines.map(&:strip)
 
-nullok_files = command(%(grep -rle 'pam_unix.so .*nullok' /etc/pam.d/*)).stdout.lines.map(&:strip)
-
-describe 'PAM authorization files' do
-  context nullok_files do
-    it { should be_empty }
+  describe 'PAM authorization files' do
+    context nullok_files do
+      it { should be_empty }
+    end
   end
 end
