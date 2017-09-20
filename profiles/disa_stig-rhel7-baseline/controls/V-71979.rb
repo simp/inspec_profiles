@@ -74,22 +74,18 @@ file:
 
 localpkg_gpgcheck=1"
 
-  describe parse_config_file("/etc/yum.conf") do
-    its('localpkg_gpgcheck') { should cmp '1' }
-  end
-end
+  yum_conf = file('/etc/yum.conf')
 
-yum_conf = file('/etc/yum.conf')
+  describe yum_conf.path do
+    context yum_conf do
+      it { should exist }
+    end
 
-describe yum_conf.path do
-  context yum_conf do
-    it { should exist }
-  end
-
-  if yum_conf.exist?
-    context '[main]' do
-      context 'gpgcheck' do
-        it { expect( ini(yum_conf.path)['main'][subject] ).to cmp 1 }
+    if yum_conf.exist?
+      context '[main]' do
+        context 'localpkg_gpgcheck' do
+          it { expect( ini(yum_conf.path)['main'][subject] ).to cmp 1 }
+        end
       end
     end
   end
