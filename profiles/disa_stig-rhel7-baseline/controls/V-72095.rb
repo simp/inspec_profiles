@@ -74,12 +74,21 @@ the full path to each \"setuid\"/\"setgid\" program in the list:
 -a always,exit -F <suid_prog_with_full_path> -F perm=x -F auid>=1000 -F
 auid!=4294967295 -k setuid/setgid"
 
-  # Need to figure out a better way to do this.
-  libraries = File.join(File.dirname(File.dirname(source)), 'libraries')
-  eval(File.read(File.join(libraries, '/profile_helper/audit.rb')))
-
   # Tried to make this as safe as possible
   target_files = command(%(find / -xautofs -noleaf -wholename '/proc' -prune -o -wholename '/sys' -prune -o -wholename '/dev' -prune -o -type f \\( -perm -4000 -o -perm -2000 \\) -print 2>/dev/null)).stdout.strip.lines
 
-  check_paths(target_files, 'x')
+  target_files.each do |target_file|
+    describe auditd.file(target_file) do
+      its('permissions') { should_not cmp [] }
+      its('action') { should_not include 'never' }
+    end
+    # Resource creates data structure including all usages of file
+    @perms = auditd.file(target_file).permissions
+
+    @perms.each do |perm|
+      describe perm do
+        it { should include 'x' }
+      end
+    end
+  end
 end

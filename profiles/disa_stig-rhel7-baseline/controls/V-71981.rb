@@ -70,7 +70,19 @@ setting the following options in the \"/etc/yum.conf\" file:
 
 repo_gpgcheck=1"
 
-  describe parse_config_file("/etc/yum.conf") do
-    its('repo_gpgcheck') { should cmp '1' }
+  yum_conf = file('/etc/yum.conf')
+
+  describe yum_conf.path do
+    context yum_conf do
+      it { should exist }
+    end
+
+    if yum_conf.exist?
+      context '[main]' do
+        context 'repo_gpgcheck' do
+          it { expect( ini(yum_conf.path)['main'][subject] ).to cmp 1 }
+        end
+      end
+    end
   end
 end

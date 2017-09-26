@@ -77,9 +77,16 @@ auid!=4294967295 -k access
 
 The audit daemon must be restarted for the changes to take effect."
 
-  # Need to figure out a better way to do this.
-  libraries = File.join(File.dirname(File.dirname(source)), 'libraries')
-  eval(File.read(File.join(libraries, '/profile_helper/audit.rb')))
-
-  check_syscalls('open_by_handle_at')
+  describe auditd.syscall("open_by_handle_at").where {arch == "b32"} do
+    its('action.uniq') { should eq ['always'] }
+    its('list.uniq') { should eq ['exit'] }
+    its('exit.uniq') { should include '-EPERM' }
+  end
+  if os.arch == 'x86_64'
+    describe auditd.syscall("open_by_handle_at").where {arch == "b64"} do
+      its('action.uniq') { should eq ['always'] }
+      its('list.uniq') { should eq ['exit'] }
+      its('exit.uniq') { should include '-EACCES' }
+    end
+  end
 end

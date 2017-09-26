@@ -47,10 +47,11 @@ password lifetime:
 
 # chage -m 1 [user]"
 
-  # @todo - filter on non-system accounts
   shadow.users.each do |user|
+    # filtering on non-system accounts (uid >= 1000)
+    next unless user(user).uid >= 1000
     describe shadow.users(user) do
-      its('min_days') { should eq 1 }
+      its('min_days.first.to_i') { should cmp >= 1 }
     end
   end
 end

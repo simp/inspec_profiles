@@ -90,11 +90,7 @@ Kernel log monitoring must also be configured to properly alert designated staff
 
 The audit daemon must be restarted for the changes to take effect."
 
-  describe auditd_rules do
-    context 'failure mode' do
-      it 'should be "1" or "2"' do
-        expect(auditd_rules.status['failure']).to match(/^(1|2)$/)
-      end
-    end
+  describe auditd.status['failure'] do
+    it { should match /^(1|2)$/ }
   end
 end

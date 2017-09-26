@@ -79,8 +79,13 @@ Ciphers aes128-ctr,aes192-ctr,aes256-ctr
 
 The SSH service must be restarted for changes to take effect."
 
-  # @todo - possibly use be_in and alter sshd_config resource to separate ciphers
-  describe sshd_config do
-    its('Ciphers') { should match /aes123-ctr,\s*aes192-ctr,\s*aes256-ctr/ }
+  @ciphers_array = inspec.sshd_config.params['ciphers']
+
+  unless @ciphers_array.nil?
+    @ciphers_array = @ciphers_array.first.split(",")
+  end
+
+  describe @ciphers_array do
+    it { should be_in ['aes128-ctr', 'aes192-ctr', 'aes256-ctr'] }
   end
 end

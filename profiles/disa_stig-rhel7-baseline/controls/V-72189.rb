@@ -72,9 +72,14 @@ those that do not match the CPU architecture):
 
 The audit daemon must be restarted for the changes to take effect."
 
-  # Need to figure out a better way to do this.
-  libraries = File.join(File.dirname(File.dirname(source)), 'libraries')
-  eval(File.read(File.join(libraries, '/profile_helper/audit.rb')))
-
-  check_syscalls('delete_module')
+  describe auditd.syscall("delete_module").where {arch == "b32"} do
+    its('action.uniq') { should eq ['always'] }
+    its('list.uniq') { should eq ['exit'] }
+  end
+  if os.arch == 'x86_64'
+    describe auditd.syscall("delete_module").where {arch == "b64"} do
+      its('action.uniq') { should eq ['always'] }
+      its('list.uniq') { should eq ['exit'] }
+    end
+  end
 end

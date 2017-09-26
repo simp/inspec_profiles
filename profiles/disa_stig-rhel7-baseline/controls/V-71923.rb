@@ -55,7 +55,7 @@ Add or update the following line in \"/etc/libuser.conf\" in the [defaults] sect
 
 crypt_style = sha512"
 
-  describe parse_config_file("/etc/libuser.conf") do
-    its('crypt_style') { should cmp 'sha512' }
+  describe command("cat /etc/libuser.conf | grep -i sha512") do
+    its('stdout.strip') { should match /^crypt_style = sha512$/ }
   end
 end
